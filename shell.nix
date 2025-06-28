@@ -4,6 +4,7 @@ pkgs.mkShell {
     kubectl
     talosctl
     talhelper
+    age
   ];
 
   TALOSCONFIG = "./clusterconfig/talosconfig";
