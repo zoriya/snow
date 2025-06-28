@@ -1,0 +1,12 @@
+clusterName: unipop
+talosVersion: v1.10.4
+kubernetesVersion: 1.33.2
+endpoint: https://kube.sdg.moe:6443
+allowSchedulingOnMasters: true
+nodes:
+  - hostname: kadan
+    ipAddress: kube.sdg.moe
+    controlPlane: true
+    installDisk: /dev/nvme0n1
+    certSANs:
+      - kube.sdg.moe
