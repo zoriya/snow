@@ -5,6 +5,8 @@ pkgs.mkShell {
     talosctl
     talhelper
     age
+    argocd
+    kubernetes-helm
   ];
 
   TALOSCONFIG = "./clusterconfig/talosconfig";
