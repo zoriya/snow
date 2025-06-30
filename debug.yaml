@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debug
+spec:
+  selector:
+    matchLabels:
+      name: debug
+  template:
+    metadata:
+      labels:
+        name: debug
+    spec:
+      containers:
+        - name: debug
+          image: ubuntu
+          command: 
+            - sleep
+            - infinity
+          securityContext:
+            privileged: true
