@@ -3,6 +3,13 @@ talosVersion: v1.10.4
 kubernetesVersion: 1.33.2
 endpoint: https://kube.sdg.moe:6443
 allowSchedulingOnMasters: true
+cniConfig:
+  name: none
+patches:
+  - |-
+    cluster:
+      proxy:
+        disabled: true
 nodes:
   - hostname: kadan
     ipAddress: kube.sdg.moe
