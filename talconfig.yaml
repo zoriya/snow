@@ -10,6 +10,11 @@ patches:
     cluster:
       proxy:
         disabled: true
+    machine:
+      features:
+        hostDNS:
+          enabled: true
+          forwardKubeDNSToHost: false
 nodes:
   - hostname: kadan
     ipAddress: kube.sdg.moe
