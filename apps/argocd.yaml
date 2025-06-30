@@ -19,3 +19,13 @@ spec:
       values: |
         global:
           domain: argocd.sdg.moe
+        certificate:
+          enabled: true
+        server:
+          ingress:
+            enabled: true
+            ingressClassName: cilium
+            annotations:
+              ingress.cilium.io/tls-passthrough: "true"
+              ingress.cilium.io/force-https: "true"
+            tls: true
