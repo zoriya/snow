@@ -28,4 +28,6 @@ spec:
             annotations:
               ingress.cilium.io/tls-passthrough: "true"
               ingress.cilium.io/force-https: "true"
+              cert-manager.io/cluster-issuer: letsencrypt
+            hostname: argocd.sdg.moe
             tls: true
