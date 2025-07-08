@@ -22,3 +22,5 @@ nodes:
     installDisk: /dev/nvme0n1
     certSANs:
       - kube.sdg.moe
+    extraManifests:
+     - ./patches/disk.yaml
