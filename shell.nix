@@ -6,6 +6,8 @@ pkgs.mkShell {
     talhelper
     age
     argocd
+    cmctl
+    kubectx
     kubernetes-helm
   ];
 

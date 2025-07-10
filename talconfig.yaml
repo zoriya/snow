@@ -15,6 +15,11 @@ patches:
         hostDNS:
           enabled: true
           forwardKubeDNSToHost: false
+  - |-
+    machine:
+      kernel:
+        modules:
+          - name: zfs
 nodes:
   - hostname: kadan
     ipAddress: kube.sdg.moe
@@ -24,3 +29,8 @@ nodes:
       - kube.sdg.moe
     extraManifests:
      - ./patches/disk.yaml
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/zfs
