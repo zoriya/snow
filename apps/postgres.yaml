@@ -17,6 +17,7 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    # needed because the CRDs are too long for kubectl apply
     syncOptions:
     - ServerSideApply=true
   source:
@@ -25,3 +26,14 @@ spec:
     targetRevision: v0.24.0
     helm:
       valuesObject: {}
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-cluster
+  namespace: postgres
+spec:
+  instances: 3
+
+  storage:
+    size: 10Gi
