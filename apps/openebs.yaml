@@ -1,0 +1,42 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: openebs
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openebs
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openebs
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  source:
+    repoURL: https://openebs.github.io/openebs
+    chart: openebs
+    targetRevision: v4.3.2
+    helm:
+      values: |
+        engines:
+          local:
+            lvm:
+              enabled: false
+          replicated:
+            mayastor:
+              enabled: false
+        alloy:
+          enabled: false
+        loki:
+          enabled: false
+
+        zfs-localpv:
+          zfsNode:
+            encrKeysDir: /var/openebs/keys
