@@ -11,6 +11,7 @@ spec:
   syncPolicy:
     automated:
       prune: true
+      selfHeal: true
   source:
     repoURL: https://github.com/argoproj/argo-helm
     targetRevision: argo-cd-8.1.2
