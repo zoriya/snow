@@ -54,3 +54,28 @@ spec:
     - protocol: TCP
       port: 22
       targetPort: 22
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu
+  namespace: debug
+  labels:
+    name: ubuntu
+spec:
+  selector:
+    matchLabels:
+      name: ubuntu
+  template:
+    metadata:
+      labels:
+        name: ubuntu
+    spec:
+      containers:
+        - name: ubuntu
+          image: ubuntu
+          command: 
+            - sleep
+            - infinity
+          securityContext:
+            privileged: true
