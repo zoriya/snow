@@ -17,7 +17,7 @@ spec:
     targetRevision: argo-cd-8.1.2
     path: charts/argo-cd
     helm:
-      values: |
+      valuesObject:
         global:
           domain: argocd.sdg.moe
         certificate:

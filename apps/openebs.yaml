@@ -24,7 +24,7 @@ spec:
     chart: openebs
     targetRevision: v4.3.2
     helm:
-      values: |
+      valuesObject:
         engines:
           local:
             lvm:
