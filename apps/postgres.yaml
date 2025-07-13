@@ -1,18 +1,18 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: postgres
+  name: cnpg
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: postgres
+  name: cnpg
   namespace: argocd
 spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: postgres
+    namespace: cnpg
   syncPolicy:
     automated:
       prune: true
@@ -27,6 +27,11 @@ spec:
     helm:
       valuesObject: {}
 ---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: postgres
+---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -37,3 +42,11 @@ spec:
 
   storage:
     size: 10Gi
+
+  # this is here because no `Role` crd exsists yet.
+  # see https://github.com/cloudnative-pg/cloudnative-pg/issues/5341
+  managed:
+    roles:
+    - name: authentik
+      login: true
+      disablePassword: true
