@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: authentik
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: authentik
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: authentik
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  source:
+    repoURL: https://charts.goauthentik.io
+    chart: authentik
+    targetRevision: 2025.6.3
+    helm:
+      valuesObject:
+        authentik:
+          secret_key: "PleaseGenerateA50CharKey"
+          postgresql:
+            host: postgres-cluster-rw.postgres
+
+        server:
+          ingress:
+            enabled: true
+            ingressClassName: cilium
+            hosts:
+              - authentik.sdg.moe
+
+        # don't use bitnami's postgres
+        postgresql:
+          enabled: false
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: authentik-db
+  namespace: authentik
+spec:
+  name: authentik
+  owner: authentik
+  cluster:
+    name: postgres-cluster
+  databaseReclaimPolicy: delete
