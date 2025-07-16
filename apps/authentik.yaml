@@ -26,6 +26,17 @@ spec:
             host: postgres-cluster-rw.postgres
 
         server:
+          env:
+            - name: AUTHENTIK_POSTGRESQL__SSLCERT
+              value: /var/postgres-ssl/tls.crt
+          volumeMounts:
+            - name: postgres-cert
+              mountPath: /var/postgres-ssl
+          volumes:
+            - name: postgres-cert
+              secret:
+                secretName: postgres-authentik
+
           ingress:
             enabled: true
             ingressClassName: cilium
@@ -35,15 +46,32 @@ spec:
         # don't use bitnami's postgres
         postgresql:
           enabled: false
----
-apiVersion: postgresql.cnpg.io/v1
-kind: Database
-metadata:
-  name: authentik-db
-  namespace: postgres
-spec:
-  name: authentik
-  owner: authentik
-  cluster:
-    name: postgres-cluster
-  databaseReclaimPolicy: delete
+
+        additionalObjects:
+          - apiVersion: postgresql.cnpg.io/v1
+            kind: Database
+            metadata:
+              name: authentik-db
+              namespace: postgres
+            spec:
+              name: authentik
+              owner: authentik
+              cluster:
+                name: postgres-cluster
+              databaseReclaimPolicy: delete
+
+          - apiVersion: cert-manager.io/v1
+            kind: Certificate
+            metadata:
+              name: postgres-authentik
+              namespace: postgres
+            spec:
+              secretName: postgres-authentik
+              usages:
+                - client auth
+              # same as pg user
+              commonName: authentik
+              issuerRef:
+                name: postgres-ca
+                kind: Issuer
+                group: cert-manager.io
