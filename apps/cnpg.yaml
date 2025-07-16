@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cnpg
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cnpg
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    # needed because the CRDs are too long for kubectl apply
+    - ServerSideApply=true
+  source:
+    repoURL: https://cloudnative-pg.github.io/charts
+    chart: cloudnative-pg
+    targetRevision: v0.24.0
+    helm:
+      valuesObject: {}

@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-cluster
+  namespace: postgres
+spec:
+  instances: 3
+
+  storage:
+    size: 10Gi
+
+  certificates:
+    clientCASecret: postgres-cert-ca
+    replicationTLSSecret: postgres-cert-ca
+
+  # this is here because no `Role` crd exsists yet.
+  # see https://github.com/cloudnative-pg/cloudnative-pg/issues/5341
+  managed:
+    roles:
+    - name: authentik
+      login: true
+      disablePassword: true

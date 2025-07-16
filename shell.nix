@@ -9,6 +9,7 @@ pkgs.mkShell {
     cmctl
     kubectx
     kubernetes-helm
+    kubectl-cnpg
   ];
 
   TALOSCONFIG = "./clusterconfig/talosconfig";

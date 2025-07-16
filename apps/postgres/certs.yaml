@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-cluster-ca
+spec:
+  secretName: postgres-cluster-ca
+  secretTemplate:
+    labels:
+      cnpg.io/reload: ""
+  usages:
+    - client auth
+  commonName: streaming_replica
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+    group: cert-manager.io
