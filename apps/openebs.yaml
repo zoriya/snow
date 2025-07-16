@@ -1,10 +1,3 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: openebs
-  labels:
-    pod-security.kubernetes.io/enforce: privileged
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -19,6 +12,11 @@ spec:
     automated:
       prune: true
       selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+      managedNamespaceMetadata:
+        labels:
+          pod-security.kubernetes.io/enforce: privileged
   source:
     repoURL: https://openebs.github.io/openebs
     chart: openebs
