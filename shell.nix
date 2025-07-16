@@ -7,7 +7,7 @@ pkgs.mkShell {
     age
     argocd
     cmctl
-    kubectx
+    kubectl-cnpg
     kubernetes-helm
     kubectl-cnpg
   ];

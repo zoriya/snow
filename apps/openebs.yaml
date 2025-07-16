@@ -12,11 +12,11 @@ spec:
     automated:
       prune: true
       selfHeal: true
-      syncOptions:
-        - CreateNamespace=true
-      managedNamespaceMetadata:
-        labels:
-          pod-security.kubernetes.io/enforce: privileged
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
   source:
     repoURL: https://openebs.github.io/openebs
     chart: openebs
