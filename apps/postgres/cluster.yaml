@@ -10,8 +10,8 @@ spec:
     size: 10Gi
 
   certificates:
-    clientCASecret: postgres-cert-ca
-    replicationTLSSecret: postgres-cert-ca
+    clientCASecret: postgres-ca
+    replicationTLSSecret: postgres-replication-cert
 
   # this is here because no `Role` crd exsists yet.
   # see https://github.com/cloudnative-pg/cloudnative-pg/issues/5341
