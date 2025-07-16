@@ -5,9 +5,6 @@ metadata:
   namespace: postgres
 spec:
   isCA: true
-  secretTemplate:
-    labels:
-      cnpg.io/reload: ""
   commonName: postgres-ca
   secretName: postgres-ca
   privateKey:
@@ -38,8 +35,17 @@ spec:
     labels:
       cnpg.io/reload: ""
   usages:
-    - client auth
-  commonName: streaming_replica
+    - server auth
+  dnsNames:
+   - postgres-cluster-rw
+   - postgres-cluster-rw.postgres
+   - postgres-cluster-rw.postgres.svc
+   - postgres-cluster-r
+   - postgres-cluster-r.postgres
+   - postgres-cluster-r.postgres.svc
+   - postgres-cluster-ro
+   - postgres-cluster-ro.postgres
+   - postgres-cluster-ro.postgres.svc
   issuerRef:
     name: postgres-ca
     kind: Issuer
