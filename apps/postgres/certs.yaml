@@ -1,36 +1,10 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: postgres-ca
+  name: postgres-server-cert
   namespace: postgres
 spec:
-  isCA: true
-  commonName: postgres-ca
-  secretName: postgres-ca
-  privateKey:
-    algorithm: ECDSA
-    size: 256
-  issuerRef:
-    name: selfsigned
-    kind: ClusterIssuer
-    group: cert-manager.io
----
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: postgres-ca
-  namespace: postgres
-spec:
-  ca:
-    secretName: postgres-ca
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: postgres-replication-cert
-  namespace: postgres
-spec:
-  secretName: postgres-replication-cert
+  secretName: postgres-server-cert
   secretTemplate:
     labels:
       cnpg.io/reload: ""
@@ -46,6 +20,20 @@ spec:
    - postgres-cluster-ro
    - postgres-cluster-ro.postgres
    - postgres-cluster-ro.postgres.svc
+  issuerRef:
+    name: postgres-ca
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-replication-cert
+spec:
+  secretName: postgres-replication-cert
+  usages:
+    - client auth
+  commonName: streaming_replica
   issuerRef:
     name: postgres-ca
     kind: Issuer

@@ -10,7 +10,9 @@ spec:
     size: 10Gi
 
   certificates:
-    clientCASecret: postgres-ca
+    serverTLSSecret: postgres-ca
+    serverCASecret: postgres-ca
+    clientCASecret: postgres-server-cert
     replicationTLSSecret: postgres-replication-cert
 
   # this is here because no `Role` crd exsists yet.
