@@ -2,7 +2,8 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: postgres-ca
-  namespace: postgres
+  # cert needs to be on the cluster's default resource ns aka cert-manager by default
+  namespace: cert-manager
 spec:
   isCA: true
   commonName: postgres-ca
@@ -16,7 +17,7 @@ spec:
     group: cert-manager.io
 ---
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: postgres-ca
   namespace: postgres

@@ -29,13 +29,19 @@ spec:
           env:
             - name: AUTHENTIK_POSTGRESQL__SSLCERT
               value: /var/postgres-ssl/tls.crt
+            - name: AUTHENTIK_POSTGRESQL__SSLKEY
+              value: /var/postgres-ssl/tls.key
           volumeMounts:
             - name: postgres-cert
               mountPath: /var/postgres-ssl
           volumes:
             - name: postgres-cert
               secret:
+                defaultMode: 0640
                 secretName: postgres-authentik
+          securityContext:
+            fsGroup: 1001
+            runAsUser: 1001
 
           ingress:
             enabled: true
@@ -64,7 +70,6 @@ spec:
             kind: Certificate
             metadata:
               name: postgres-authentik
-              namespace: postgres
             spec:
               secretName: postgres-authentik
               usages:
@@ -73,5 +78,5 @@ spec:
               commonName: authentik
               issuerRef:
                 name: postgres-ca
-                kind: Issuer
+                kind: ClusterIssuer
                 group: cert-manager.io
