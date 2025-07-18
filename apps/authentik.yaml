@@ -56,6 +56,9 @@ spec:
 
         redis:
           enabled: true
+          master:
+            persistence:
+              enabled: false
 
         additionalObjects:
           - apiVersion: postgresql.cnpg.io/v1
