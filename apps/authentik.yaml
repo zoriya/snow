@@ -38,11 +38,16 @@ spec:
           volumeMounts:
             - name: postgres-cert
               mountPath: /var/postgres-ssl
+            - name: authentik-media
+              mountPath: /media
           volumes:
             - name: postgres-cert
               secret:
                 defaultMode: 0640
                 secretName: postgres-authentik
+            - name: authentik-media
+              persistentVolumeClaim:
+                claimName: authentik-media
           securityContext:
             fsGroup: 1001
             runAsUser: 1001
