@@ -8,6 +8,9 @@ spec:
   isCA: true
   commonName: postgres-ca
   secretName: postgres-ca
+  secretTemplate:
+    labels:
+      cnpg.io/reload: ""
   privateKey:
     algorithm: ECDSA
     size: 256

@@ -31,6 +31,9 @@ metadata:
   name: postgres-replication-cert
 spec:
   secretName: postgres-replication-cert
+  secretTemplate:
+    labels:
+      cnpg.io/reload: ""
   usages:
     - client auth
   commonName: streaming_replica
