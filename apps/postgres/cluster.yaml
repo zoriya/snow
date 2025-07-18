@@ -14,6 +14,9 @@ spec:
     serverTLSSecret: postgres-server-cert
     clientCASecret: postgres-server-cert
     replicationTLSSecret: postgres-replication-cert
+  postgresql:
+    pg_hba:
+      - hostssl all all all cert
 
   # this is here because no `Role` crd exsists yet.
   # see https://github.com/cloudnative-pg/cloudnative-pg/issues/5341
