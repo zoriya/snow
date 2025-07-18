@@ -47,7 +47,7 @@ spec:
                 secretName: postgres-authentik
             - name: authentik-media
               persistentVolumeClaim:
-                claimName: authentik-media
+                claimName: media-pvc
           securityContext:
             fsGroup: 1001
             runAsUser: 1001
@@ -92,3 +92,14 @@ spec:
                 name: postgres-ca
                 kind: ClusterIssuer
                 group: cert-manager.io
+
+          - apiVersion: v1
+            kind: PersistentVolumeClaim
+            metadata:
+              name: media-pvc
+            spec:
+              resources:
+                requests:
+                  storage: 1Gi
+              accessModes:
+                - ReadWriteOnce
