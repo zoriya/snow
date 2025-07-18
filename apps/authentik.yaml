@@ -34,24 +34,15 @@ spec:
             - name: AUTHENTIK_POSTGRESQL__SSLKEY
               value: /var/postgres-ssl/tls.key
             - name: AUTHENTIK_POSTGRESQL__SSLROOTCERT
-              value: /var/postgres-ca/ca.crt
+              value: /var/postgres-ssl/ca.crt
           volumeMounts:
             - name: postgres-cert
               mountPath: /var/postgres-ssl
-            - name: postgres-cert
-              mountPath: /var/postgres-ca
           volumes:
             - name: postgres-cert
               secret:
                 defaultMode: 0640
                 secretName: postgres-authentik
-            - name: postgres-root
-              secret:
-                defaultMode: 0640
-                secretName: postgres-ca
-                items:
-                  - key: ca.crt
-                    path: ca.crt
           securityContext:
             fsGroup: 1001
             runAsUser: 1001

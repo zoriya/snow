@@ -10,8 +10,8 @@ spec:
     size: 10Gi
 
   certificates:
-    serverTLSSecret: postgres-ca
-    serverCASecret: postgres-ca
+    serverCASecret: postgres-server-cert
+    serverTLSSecret: postgres-server-cert
     clientCASecret: postgres-server-cert
     replicationTLSSecret: postgres-replication-cert
 
