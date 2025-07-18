@@ -38,16 +38,11 @@ spec:
           volumeMounts:
             - name: postgres-cert
               mountPath: /var/postgres-ssl
-            - name: authentik-media
-              mountPath: /media
           volumes:
             - name: postgres-cert
               secret:
                 defaultMode: 0640
                 secretName: postgres-authentik
-            - name: authentik-media
-              persistentVolumeClaim:
-                claimName: media-pvc
           securityContext:
             fsGroup: 1001
             runAsUser: 1001
@@ -58,6 +53,15 @@ spec:
             ingressClassName: cilium
             hosts:
               - authentik.sdg.moe
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt
+          volumeMounts:
+            - name: authentik-media
+              mountPath: /media
+          volumes:
+            - name: authentik-media
+              persistentVolumeClaim:
+                claimName: media-pvc
 
         redis:
           enabled: true
