@@ -27,6 +27,9 @@ spec:
 
         global:
           env:
+            - name: AUTHENTIK_STORAGE__MEDIA__BACKEND
+              value: s3
+
             - name: AUTHENTIK_POSTGRESQL__SSLMODE
               value: verify-full
             - name: AUTHENTIK_POSTGRESQL__SSLCERT
@@ -55,13 +58,6 @@ spec:
               - authentik.sdg.moe
             annotations:
               cert-manager.io/cluster-issuer: letsencrypt
-          volumeMounts:
-            - name: authentik-media
-              mountPath: /media
-          volumes:
-            - name: authentik-media
-              persistentVolumeClaim:
-                claimName: media-pvc
 
         redis:
           enabled: true
@@ -96,14 +92,3 @@ spec:
                 name: postgres-ca
                 kind: ClusterIssuer
                 group: cert-manager.io
-
-          - apiVersion: v1
-            kind: PersistentVolumeClaim
-            metadata:
-              name: media-pvc
-            spec:
-              resources:
-                requests:
-                  storage: 1Gi
-              accessModes:
-                - ReadWriteOnce
