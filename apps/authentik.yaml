@@ -54,9 +54,8 @@ spec:
             hosts:
               - authentik.sdg.moe
 
-        # don't use bitnami's postgres
-        postgresql:
-          enabled: false
+        redis:
+          enabled: true
 
         additionalObjects:
           - apiVersion: postgresql.cnpg.io/v1
