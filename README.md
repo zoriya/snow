@@ -16,3 +16,11 @@ helm install argocd oci://ghcr.io/argoproj/argo-helm/argo-cd -n argocd --create-
 
 kubectl apply -f ./apps/apps.yaml
 ```
+
+## Notes
+
+zfs pool creation:
+```bash
+k -n kube-system debug -it --profile sysadmin --image=ubuntu node/kadan
+chroot /host zpool create -o ashift=12 -O mountpoint=/var/ocean -O xattr=sa -O compression=zstd -O acltype=posixacl -O atime=off ocean raidz sdc sdd
+```

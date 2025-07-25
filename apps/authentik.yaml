@@ -29,6 +29,7 @@ spec:
           env:
             - name: AUTHENTIK_STORAGE__MEDIA__BACKEND
               value: s3
+            # TODO: configure s3
 
             - name: AUTHENTIK_POSTGRESQL__SSLMODE
               value: verify-full

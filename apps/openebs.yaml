@@ -52,3 +52,13 @@ parameters:
   fstype: zfs
   poolname: tank
 provisioner: zfs.csi.openebs.io
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: openebs-zfs-ocean
+parameters:
+  compression: zstd
+  fstype: zfs
+  poolname: ocean
+provisioner: zfs.csi.openebs.io
