@@ -23,23 +23,37 @@ spec:
         name: debug
     spec:
       containers:
-        - name: debug
-          # image: nixery.dev/shell/nix/tmux/vim
-          # command: 
-          #   - sleep
-          #   - infinity
-          image: lscr.io/linuxserver/openssh-server:latest
-          env:
-            - name: PUBLIC_KEY_URL
-              value: https://github.com/zoriya.keys
-            - name: SUDO_ACCESS
-              value: "true"
-            - name: USER_NAME
-              value: zoriya
-            - name: LISTEN_PORT
-              value: "22"
-          securityContext:
-            privileged: true
+      - name: debug
+        # image: nixery.dev/shell/nix/tmux/vim
+        # command: 
+        #   - sleep
+        #   - infinity
+        image: lscr.io/linuxserver/openssh-server:latest
+        env:
+          - name: PUBLIC_KEY_URL
+            value: https://github.com/zoriya.keys
+          - name: SUDO_ACCESS
+            value: "true"
+          - name: USER_NAME
+            value: zoriya
+          - name: LISTEN_PORT
+            value: "22"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /dev
+          name: dev
+        - mountPath: /host
+          name: host
+      volumes:
+      - name: host
+        hostPath:
+          path: /
+          type: Directory
+      - name: dev
+        hostPath:
+          path: /dev
+          type: Directory
 ---
 apiVersion: v1
 kind: Service
