@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transmission
+spec:
+  template:
+    spec:
+      containers:
+        - name: transmission
+          image: ghcr.io/home-operations/transmission@4.0.6
+          env:
+            - TRANSMISSION__UMASK: "002"
+            - TRANSMISSION__INCOMPLETE-DIR-ENABLED: false
+            - TRANSMISSION__DOWNLOAD-DIR: "/medias/downloads"
+            - TRANSMISSION__DOWNLOAD-QUEUE-ENABLED: false
+            - TRANSMISSION__RENAME-PARTIAL-FILES: false
+            - TRANSMISSION__TRASH-CAN-ENABLED: false
+            - TRANSMISSION__SCRIPT-TORRENT-ADDED-ENABLED: true
+            - TRANSMISSION__SCRIPT-TORRENT-ADDED-FILENAME: "scripts/guesspath"
+          volumeMounts:
+            - name: medias
+              mountPath: /medias
+      volumes:
+        - name: medias
+
+---
+spec:
+  template:
+    spec:
+      containers:
+      - name: backend-lucca-faces
+        image: lucca-faces-back
+        ports:
+        - name: back-port
+          containerPort: 8080
+        env:
+        - name: TZ
+          value: Europe/Paris
+        volumeMounts:
+        - mountPath: /app/appsettings.json
+          name: appsettings
+          subPath: appsettings.json.model
+      volumes:
+      - name: appsettings
+        secret:
+          defaultMode: 420
+          secretName: appsettings-faces
