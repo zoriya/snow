@@ -15,5 +15,3 @@ spec:
     repoURL: https://github.com/zoriya/snow
     targetRevision: HEAD
     path: ./apps
-    directory:
-      recurse: true
