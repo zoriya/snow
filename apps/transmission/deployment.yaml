@@ -22,26 +22,3 @@ spec:
               mountPath: /medias
       volumes:
         - name: medias
-
----
-spec:
-  template:
-    spec:
-      containers:
-      - name: backend-lucca-faces
-        image: lucca-faces-back
-        ports:
-        - name: back-port
-          containerPort: 8080
-        env:
-        - name: TZ
-          value: Europe/Paris
-        volumeMounts:
-        - mountPath: /app/appsettings.json
-          name: appsettings
-          subPath: appsettings.json.model
-      volumes:
-      - name: appsettings
-        secret:
-          defaultMode: 420
-          secretName: appsettings-faces
