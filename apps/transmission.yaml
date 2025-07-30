@@ -17,4 +17,4 @@ spec:
   source:
     repoURL: https://github.com/zoriya/snow
     targetRevision: HEAD
-    path: apps/transmission
+    path: charts/transmission

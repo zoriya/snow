@@ -53,12 +53,32 @@ parameters:
   poolname: tank
 provisioner: zfs.csi.openebs.io
 ---
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
+apiVersion: zfs.openebs.io/v1
+kind: ZFSVolume
 metadata:
-  name: openebs-zfs-ocean
-parameters:
-  compression: zstd
-  fstype: zfs
-  poolname: ocean
-provisioner: zfs.csi.openebs.io
+  name: downloads
+  namespace: openebs
+spec:
+  capacity: 16Ti
+  fsType: zfs
+  ownerNodeID: kadan
+  poolName: ocean
+  volumeType: DATASET
+  shared: "yes"
+status:
+  state: Ready
+---
+apiVersion: zfs.openebs.io/v1
+kind: ZFSVolume
+metadata:
+  name: medias
+  namespace: openebs
+spec:
+  capacity: 16Ti
+  fsType: zfs
+  ownerNodeID: kadan
+  poolName: ocean
+  volumeType: DATASET
+  shared: "yes"
+status:
+  state: Ready

@@ -5,20 +5,57 @@ metadata:
 spec:
   template:
     spec:
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        fsGroupChangePolicy: OnRootMismatch
       containers:
-        - name: transmission
-          image: ghcr.io/home-operations/transmission@4.0.6
-          env:
-            - TRANSMISSION__UMASK: "002"
-            - TRANSMISSION__INCOMPLETE-DIR-ENABLED: false
-            - TRANSMISSION__DOWNLOAD-DIR: "/medias/downloads"
-            - TRANSMISSION__DOWNLOAD-QUEUE-ENABLED: false
-            - TRANSMISSION__RENAME-PARTIAL-FILES: false
-            - TRANSMISSION__TRASH-CAN-ENABLED: false
-            - TRANSMISSION__SCRIPT-TORRENT-ADDED-ENABLED: true
-            - TRANSMISSION__SCRIPT-TORRENT-ADDED-FILENAME: "scripts/guesspath"
-          volumeMounts:
-            - name: medias
-              mountPath: /medias
-      volumes:
+      - name: transmission
+        image: ghcr.io/home-operations/transmission:4.0.6
+        env:
+        - name: TRANSMISSION__UMASK
+          value: "002"
+        - name: TRANSMISSION__INCOMPLETE_DIR_ENABLED
+          value: "false"
+        - name: TRANSMISSION__DOWNLOAD_DIR
+          value: "/downloads"
+        - name: TRANSMISSION__DOWNLOAD_QUEUE_ENABLED
+          value: "false"
+        - name: TRANSMISSION__RENAME_PARTIAL_FILES
+          value: "false"
+        - name: TRANSMISSION__TRASH_CAN_ENABLED
+          value: "false"
+        - name: TRANSMISSION__SCRIPT_TORRENT_ADDED_ENABLED
+          value: "true"
+        # - name: TRANSMISSION__SCRIPT_TORRENT_ADDED_FILENAME
+        #   value: "scripts/guesspath"
+        - name: TRANSMISSION__RPC_PORT
+          value: "9091"
+        - name: TRANSMISSION__PEER_PORT
+          value: "27071"
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: downloads
+          mountPath: /downloads
         - name: medias
+          mountPath: /medias
+      - name: flood
+        image: jesec/flood:4.9.5
+        volumeMounts:
+        - name: downloads
+          mountPath: /downloads
+        - name: medias
+          mountPath: /medias
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: config
+      - name: medias
+        persistentVolumeClaim:
+          claimName: medias
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: downloads
