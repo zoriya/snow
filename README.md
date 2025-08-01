@@ -15,6 +15,7 @@ helm upgrade -i cilium cilium/cilium \
 helm install argocd oci://ghcr.io/argoproj/argo-helm/argo-cd -n argocd --create-namespace
 
 kubectl apply -f ./apps/apps.yaml
+kubectl create secret generic bitwarden-access-token -n external-secrets --from-literal token=$BW_ACCESS_TOKEN
 ```
 
 ## Notes
