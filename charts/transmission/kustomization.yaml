@@ -9,6 +9,7 @@ labels:
 resources:
 - ./deployment.yaml
 - ./service.yaml
+- ./ingress.yaml
 - ./pv-downloads.yaml
 - ./pv-medias.yaml
 - ./pv-config.yaml

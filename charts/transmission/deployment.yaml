@@ -42,17 +42,33 @@ spec:
           mountPath: /downloads
         - name: medias
           mountPath: /medias
+
       - name: flood
         image: jesec/flood:4.9.5
+        env:
+        - name: FLOOD_OPTION_AUTH
+          value: none
+        - name: FLOOD_OPTION_TRURL
+          value: "transmission.svc:9091"
+        - name: FLOOD_OPTION_TRUSER
+          value: ""
+        - name: FLOOD_OPTION_TRPASS
+          value: ""
         volumeMounts:
+        - name: flood-config
+          mountPath: /data
         - name: downloads
           mountPath: /downloads
         - name: medias
           mountPath: /medias
+
       volumes:
       - name: config
         persistentVolumeClaim:
           claimName: config
+      - name: flood-config
+        persistentVolumeClaim:
+          claimName: flood-config
       - name: medias
         persistentVolumeClaim:
           claimName: medias
