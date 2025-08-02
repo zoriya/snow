@@ -8,6 +8,3 @@ spec:
   - name: http
     port: 80
     targetPort: 3000
-  selector:
-    labels:
-      app.kubernetes.io/component: flood

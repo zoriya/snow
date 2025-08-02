@@ -2,13 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flood
-  label:
-    app.kubernetes.io/component: flood
 spec:
   template:
-    metadata:
-      label:
-        app.kubernetes.io/component: flood
     spec:
       securityContext:
         fsGroup: 1001
@@ -29,7 +24,7 @@ spec:
         - name: FLOOD_OPTION_TRPASS
           value: ""
         volumeMounts:
-        - name: flood-config
+        - name: config
           mountPath: /data
         - name: downloads
           mountPath: /downloads
