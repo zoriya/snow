@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flood
+  label:
+    app.kubernetes.io/component: flood
+spec:
+  template:
+    metadata:
+      label:
+        app.kubernetes.io/component: flood
+    spec:
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        fsGroupChangePolicy: OnRootMismatch
+      containers:
+      - name: flood
+        image: jesec/flood:4.9.5
+        env:
+        - name: FLOOD_OPTION_AUTH
+          value: none
+        - name: FLOOD_OPTION_TRURL
+          value: "transmission.svc:9091"
+        - name: FLOOD_OPTION_TRUSER
+          value: ""
+        - name: FLOOD_OPTION_TRPASS
+          value: ""
+        volumeMounts:
+        - name: flood-config
+          mountPath: /data
+        - name: downloads
+          mountPath: /downloads
+          readonly: true
+        - name: medias
+          mountPath: /medias
+          readonly: true
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: flood-config
+      - name: medias
+        persistentVolumeClaim:
+          claimName: medias
+      - name: downloads
+        persistentVolumeClaim:
+          claimName: downloads
