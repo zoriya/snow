@@ -18,11 +18,17 @@ spec:
         - name: FLOOD_OPTION_AUTH
           value: none
         - name: FLOOD_OPTION_TRURL
-          value: "transmission.svc:9091"
+          value: "http://transmission:9091"
         - name: FLOOD_OPTION_TRUSER
-          value: ""
+          valueFrom:
+            secretKeyRef:
+              name: transmission
+              key: username
         - name: FLOOD_OPTION_TRPASS
-          value: ""
+          valueFrom:
+            secretKeyRef:
+              name: transmission
+              key: password
         volumeMounts:
         - name: config
           mountPath: /data

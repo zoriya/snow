@@ -35,6 +35,12 @@ spec:
           value: "9091"
         - name: TRANSMISSION__PEER_PORT
           value: "27071"
+        - name: TRANSMISSION__RPC_AUTHENTICATION_REQUIRED
+          value: "true"
+        envFrom:
+        - prefix: TRANSMISSION__RPC_
+          secretRef:
+            name: transmission
         volumeMounts:
         - name: config
           mountPath: /config
