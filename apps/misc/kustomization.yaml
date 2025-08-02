@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - cilium-announcement.yaml
   - ip-pool.yaml
+  - bitwarden.yaml
