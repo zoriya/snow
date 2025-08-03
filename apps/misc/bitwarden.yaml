@@ -7,20 +7,21 @@ spec:
     bitwardensecretsmanager:
       apiURL: https://vault.bitwarden.eu/api
       identityURL: https://vault.bitwarden.eu/identity
+      organizationID: b461238b-9b93-4598-b12c-b32c00834ab6
+      projectID: b63f0f85-2c6f-4f99-b999-b32c009d7bdf
+
       auth:
         secretRef:
           credentials:
             namespace: external-secrets
             name: bitwarden-access-token
             key: token
+      bitwardenServerSDKURL: https://bitwarden-sdk-server.external-secrets.svc.cluster.local:9998
       caProvider:
         type: Secret
         namespace: external-secrets
         name: bitwarden-tls-certs
         key: ca.crt
-
-      organizationID: b461238b-9b93-4598-b12c-b32c00834ab6
-      projectID: b63f0f85-2c6f-4f99-b999-b32c009d7bdf
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate

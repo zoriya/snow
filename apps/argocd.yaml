@@ -32,3 +32,41 @@ spec:
               cert-manager.io/cluster-issuer: letsencrypt
             hostname: argocd.sdg.moe
             tls: true
+        configs:
+          cm:
+            dex.config: |
+              connectors:
+              - id: authentik
+                name: authentik
+                type: oidc
+                config:
+                  issuer: https://authentik.sdg.moe/application/o/argocd/
+                  clientID: $authentik:clientId
+                  clientSecret: $authentik:clientSecret
+                  insecureEnableGroups: true
+                  scopes:
+                    - openid
+                    - profile
+                    - email
+          rbac:
+            policy.csv: |
+              g, admins, role:admin
+              g, read-only, role:admins
+        extraObjects:
+        - apiVersion: external-secrets.io/v1
+          kind: ExternalSecret
+          metadata:
+            name: authentik
+          spec:
+            refreshInterval: 24h
+            secretStoreRef:
+              name: bitwarden
+              kind: ClusterSecretStore
+            target:
+              template:
+                metadata:
+                  labels:
+                    app.kubernetes.io/part-of: argocd
+            dataFrom:
+            - extract:
+                key: argocd-sso

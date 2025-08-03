@@ -63,6 +63,11 @@ spec:
               - authentik.sdg.moe
             annotations:
               cert-manager.io/cluster-issuer: letsencrypt
+              acme.cert-manager.io/http01-edit-in-place: "true"
+            tls:
+            - secretName: authentik-tls
+              hosts:
+                - authentik.sdg.moe
 
         redis:
           enabled: true
