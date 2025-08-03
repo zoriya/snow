@@ -23,5 +23,5 @@ kubectl create secret generic bitwarden-access-token -n external-secrets --from-
 zfs pool creation:
 ```bash
 k -n kube-system debug -it --profile sysadmin --image=ubuntu node/kadan
-chroot /host zpool create -o ashift=12 -O mountpoint=/var/ocean -O xattr=sa -O compression=zstd -O acltype=posixacl -O atime=off ocean raidz sdc sdd
+chroot /host zpool create -o ashift=12 -O mountpoint=legacy -O xattr=sa -O compression=zstd -O acltype=posixacl -O atime=off ocean raidz sdc sdd
 ```

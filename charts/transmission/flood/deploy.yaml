@@ -15,10 +15,12 @@ spec:
       - name: flood
         image: jesec/flood:4.9.5
         env:
+        - name: HOME
+          value: /config
         - name: FLOOD_OPTION_AUTH
           value: none
         - name: FLOOD_OPTION_TRURL
-          value: "http://transmission:9091"
+          value: "http://transmission:9091/transmission/rpc"
         - name: FLOOD_OPTION_TRUSER
           valueFrom:
             secretKeyRef:
@@ -31,13 +33,13 @@ spec:
               key: password
         volumeMounts:
         - name: config
-          mountPath: /data
+          mountPath: /config
         - name: downloads
           mountPath: /downloads
-          readonly: true
+          readOnly: true
         - name: medias
           mountPath: /medias
-          readonly: true
+          readOnly: true
       volumes:
       - name: config
         persistentVolumeClaim:

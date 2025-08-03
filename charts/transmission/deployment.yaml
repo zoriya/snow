@@ -37,10 +37,16 @@ spec:
           value: "27071"
         - name: TRANSMISSION__RPC_AUTHENTICATION_REQUIRED
           value: "true"
-        envFrom:
-        - prefix: TRANSMISSION__RPC_
-          secretRef:
-            name: transmission
+        - name: TRANSMISSION__RPC_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: transmission
+              key: username
+        - name: TRANSMISSION__RPC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: transmission
+              key: password
         volumeMounts:
         - name: config
           mountPath: /config
