@@ -18,6 +18,9 @@ spec:
     pg_hba:
       - hostssl all all all cert
 
+  backup:
+    retentionPolicy: 7d
+
   # this is here because no `Role` crd exsists yet.
   # see https://github.com/cloudnative-pg/cloudnative-pg/issues/5341
   managed:
