@@ -51,7 +51,7 @@ spec:
           rbac:
             policy.csv: |
               g, admins, role:admin
-              g, read-only, role:admins
+              g, admins-ro, role:admins
         extraObjects:
         - apiVersion: external-secrets.io/v1
           kind: ExternalSecret
