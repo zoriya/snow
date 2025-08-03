@@ -8,5 +8,4 @@ labels:
 
 resources:
 - ./deploy.yaml
-- ./ingress.yaml
 - ./svc.yaml
