@@ -14,3 +14,4 @@ resources:
 - ./pv-medias.yaml
 - ./pv-config.yaml
 - ./flood
+- ./smartrss

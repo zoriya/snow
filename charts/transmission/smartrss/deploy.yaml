@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smartrss
+spec:
+  template:
+    spec:
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        fsGroupChangePolicy: OnRootMismatch
+      containers:
+      - name: smartrss
+        image: nixery.dev/shell/rsstail-py
+        command: [/app/smartrss.sh]
+        env:
+        - name: URL
+          valueFrom:
+            secretKeyRef:
+              name: smartrss
+              key: url
+        - name: TRURL
+          value: "http://transmission:9091/transmission/rpc"
+        - name: TRUSER
+          valueFrom:
+            secretKeyRef:
+              name: transmission
+              key: username
+        - name: TRPASS
+          valueFrom:
+            secretKeyRef:
+              name: transmission
+              key: password
+        volumeMounts:
+        - name: scripts
+          mountPath: /app
+          readOnly: true
+        - name: medias
+          mountPath: /medias
+          readOnly: true
+      volumes:
+      - name: scripts
+        configMap:
+          name: smartrss-scripts
+      - name: medias
+        persistentVolumeClaim:
+          # TODO: use medias once i actually have some :c
+          claimName: downloads
