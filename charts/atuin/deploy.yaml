@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: atuin
+spec:
+  template:
+    spec:
+      containers:
+      - name: atuin
+        image: ghcr.io/atuinsh/atuin:v18.8.0
+        args: [server, start]
+        ports:
+        - name: http
+          containerPort: 8888
+        env:
+        - name: ATUIN_HOST
+          value: 0.0.0.0
+        - name: ATUIN_PORT
+          value: "8888"
+        - name: ATUIN_OPEN_REGISTRATION
+          value: "true"
+        - name: ATUIN_DB_URI
+          value: postgres://atuin@postgres-cluster-rw.postgres/atuin?sslcert=/pg/tls.crt&sslkey=/pg/tls.key&sslrootcert=/pg/ca.crt
+        volumeMounts:
+        - name: postgres-cert
+          mountPath: /pg
+        - name: config
+          mountPath: /config
+      volumes:
+      - name: postgres-cert
+        secret:
+          secretName: postgres-atuin
+          defaultMode: 0640
+      - name: config
+        configMap:
+          # Just an empty cm 
+          name: settings
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001

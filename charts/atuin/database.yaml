@@ -1,0 +1,26 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: atuin-db
+  namespace: postgres
+spec:
+  name: atuin
+  owner: atuin
+  cluster:
+    name: postgres-cluster
+  databaseReclaimPolicy: delete
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-atui
+spec:
+  secretName: postgres-atuin
+  usages:
+  - client auth
+  # same as pg user
+  commonName: atuin
+  issuerRef:
+    name: postgres-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
