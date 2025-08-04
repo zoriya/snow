@@ -20,6 +20,16 @@ patches:
       kernel:
         modules:
           - name: zfs
+  - |-
+    machine:
+      kernel:
+        modules:
+          - name: nvidia
+          - name: nvidia_uvm
+          - name: nvidia_drm
+          - name: nvidia_modeset
+      sysctls:
+        net.core.bpf_jit_harden: 1
 nodes:
   - hostname: kadan
     ipAddress: kube.sdg.moe
@@ -34,3 +44,5 @@ nodes:
         systemExtensions:
           officialExtensions:
             - siderolabs/zfs
+            - siderolabs/nonfree-kmod-nvidia-lts
+            - siderolabs/nvidia-container-toolkit-lts
