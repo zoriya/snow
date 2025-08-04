@@ -1,0 +1,121 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyoo
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyoo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  source:
+    repoURL: ghcr.io/zoriya/helm-charts
+    chart: kyoo
+    targetRevision: 4.7.1
+    helm:
+      valuesObject:
+        meilisearch:
+          enabled: true
+        rabbitmq:
+          enabled: true
+        postgresql:
+          enabled: true
+        kyoo:
+          address: https://kyoo.sdg.moe
+          transcoderAcceleration: nvidia
+          oidc_providers:
+            - name: Authentik
+              logo: https://avatars.githubusercontent.com/u/82976448?s=48&v=4
+              existingSecret: sso
+              clientIdKey: clientId
+              clientSecretKey: clientSecret
+              scope: "email openid profile"
+              authMethod: ClientSecretBasic
+              authorizationAddress: https://authentik.sdg.moe/application/o/authorize/
+              tokenAddress: https://authentik.sdg.moe/application/o/token/
+              profileAddress: https://authentik.sdg.moe/application/o/userinfo/
+        ingress:
+          enabled: true
+          ingressClassName: cilium
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt
+            acme.cert-manager.io/http01-edit-in-place: "true"
+          host: kyoo.sdg.moe
+          tls: true
+          tlsSecret: kyoo-tls
+        media:
+          baseMountPath: /medias
+          volumeMounts:
+          - name: medias
+            mountPath: /medias
+            readOnly: true
+          volumes:
+          - name: medias
+            persistentVolumeClaim:
+              claimName: medias
+        extraObjects:
+        - apiVersion: v1
+          kind: Secret
+          metadata:
+            name: bigsecret
+          type: Opaque
+          stringData:
+            # yes those aren't really secrets, i'll change it for v5 soonish
+            kyoo_apikeys: yHXWGsjfjE6sy6UxavqmTUYxgCFYek
+            tmdb_apikey: ""
+            tvdb_apikey: ""
+            tvdb_pin: ""
+            MEILI_MASTER_KEY: barkLike8SuperDucks
+            postgres_user: kyoo_all
+            postgres_password: watchSomething4me
+            rabbitmq_user: kyoo_all
+            rabbitmq_password: youAreAmazing2
+            rabbitmq_cookie: mmmGoodCookie
+
+        - apiVersion: v1
+          kind: PersistentVolume
+          metadata:
+            name: kyoo-medias
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            capacity:
+              storage: 200Ti
+            csi:
+              driver: zfs.csi.openebs.io
+              fsType: zfs
+              volumeAttributes:
+                openebs.io/poolname: ocean
+              volumeHandle: "medias"
+            persistentVolumeReclaimPolicy: Retain
+        - apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+            name: medias
+          spec:
+            storageClassName: ""
+            volumeName: kyoo-medias
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 200Ti
+
+        - apiVersion: external-secrets.io/v1
+          kind: ExternalSecret
+          metadata:
+            name: sso
+          spec:
+            refreshInterval: 24h
+            secretStoreRef:
+              kind: ClusterSecretStore
+              name: bitwarden
+            dataFrom:
+              - extract:
+                  key: kyoo-sso

@@ -13,7 +13,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
       - name: smartrss
-        image: nixery.dev/shell/rsstail-py
+        image: nixery.dev/shell/rsstail-py/transmission_4/guessit
         command: [/app/smartrss.sh]
         env:
         - name: URL
