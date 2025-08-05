@@ -15,17 +15,29 @@ spec:
     syncOptions:
     - CreateNamespace=true
   source:
-    repoURL: ghcr.io/zoriya/helm-charts
-    chart: kyoo
-    targetRevision: 4.7.1
+    # repoURL: ghcr.io/zoriya/helm-charts
+    # chart: kyoo
+    # targetRevision: 4.7.1
+    repoURL: https://github.com/zoriya/kyoo
+    path: chart
+    targetRevision: feat/runtime-class
     helm:
       valuesObject:
+        global:
+          image:
+            tag: 4.7.1
         meilisearch:
           enabled: true
         rabbitmq:
           enabled: true
         postgresql:
           enabled: true
+        transcoder:
+          runtimeClass: nvidia
+          kyoo_transcoder:
+            extraEnv:
+            - name: GOCODER_PREFIX
+              value: /video
         kyoo:
           address: https://kyoo.sdg.moe
           transcoderAcceleration: nvidia
