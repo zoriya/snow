@@ -45,6 +45,7 @@ metadata:
   name: openebs-zfs-tank
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
+allowVolumeExpansion: true
 parameters:
   recordsize: 128k
   compression: "off"
