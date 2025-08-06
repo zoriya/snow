@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: immich
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: immich
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  source:
+    repoURL: ghcr.io/immich-app/immich-charts/immich
+    chart: immich
+    targetRevision: 0.9.3
+    helm:
+      valueObject:
+        image:
+          tag: v1.137.3
+        redis:
+          enabled: true
+        server:
+          ingress:
+            main:
+              enabled: true
+              annotations:
+                cert-manager.io/cluster-issuer: letsencrypt
+                acme.cert-manager.io/http01-edit-in-place: "true"
+                # proxy-body-size is set to 0 to remove the body limit on file uploads
+                nginx.ingress.kubernetes.io/proxy-body-size: "0"
+              hosts:
+              - host: immich.sdg.moe
+                paths:
+                  - path: "/"
+              tls:
+              - secretName: immich-tls
+                hosts:
+                - immich.sdg.moe
+
