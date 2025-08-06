@@ -52,6 +52,9 @@ spec:
               authorizationAddress: https://authentik.sdg.moe/application/o/authorize/
               tokenAddress: https://authentik.sdg.moe/application/o/token/
               profileAddress: https://authentik.sdg.moe/application/o/userinfo/
+        back:
+          persistence:
+            size: 20Gi
         ingress:
           enabled: true
           ingressClassName: cilium
