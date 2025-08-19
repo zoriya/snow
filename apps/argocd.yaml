@@ -34,6 +34,7 @@ spec:
             tls: true
         configs:
           cm:
+            kustomize.buildOptions: --enable-helm
             dex.config: |
               connectors:
               - id: authentik
