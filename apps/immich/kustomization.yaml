@@ -10,3 +10,4 @@ helmCharts:
 
 resources:
 - pvc.yaml
+- cluster.yaml
