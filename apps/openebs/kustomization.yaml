@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmCharts:
+- repo: https://openebs.github.io/openebs
+  name: openebs
+  namespace: openebs
+  releaseName: openebs
+  version: v4.3.2
+  valuesFile: values.yaml
+
+resources:
+- storage-class.yaml
+- volumes.yaml

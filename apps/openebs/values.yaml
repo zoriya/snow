@@ -1,0 +1,15 @@
+engines:
+  local:
+    lvm:
+      enabled: false
+  replicated:
+    mayastor:
+      enabled: false
+alloy:
+  enabled: false
+loki:
+  enabled: false
+
+zfs-localpv:
+  zfsNode:
+    encrKeysDir: /var/openebs/keys
