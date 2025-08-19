@@ -13,7 +13,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
       - name: smartrss
-        image: nixery.dev/shell/rsstail-py/transmission_4/guessit
+        image: nixery.dev/shell/rsstail-py/transmission_4/python313packages.guessit
         command: [/app/smartrss.sh]
         env:
         - name: URL
@@ -44,6 +44,7 @@ spec:
       - name: scripts
         configMap:
           name: smartrss-scripts
+          defaultMode: 0555
       - name: medias
         persistentVolumeClaim:
           # TODO: use medias once i actually have some :c

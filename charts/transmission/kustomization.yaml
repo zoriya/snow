@@ -7,11 +7,8 @@ labels:
     app.kubernetes.io/name: transmission
 
 resources:
-- ./deployment.yaml
-- ./service.yaml
-- ./secrets.yaml
-- ./pv-downloads.yaml
-- ./pv-medias.yaml
-- ./pv-config.yaml
+- ./transmission
 - ./flood
 - ./smartrss
+- ./pv-downloads.yaml
+- ./pv-medias.yaml

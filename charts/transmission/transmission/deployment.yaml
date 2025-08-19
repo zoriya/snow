@@ -18,9 +18,14 @@ spec:
         - name: TRANSMISSION__UMASK
           value: "002"
         - name: TRANSMISSION__INCOMPLETE_DIR_ENABLED
-          value: "false"
+          value: "true"
         - name: TRANSMISSION__DOWNLOAD_DIR
           value: "/downloads"
+        - name: TRANSMISSION__INCOMPLETE_DIR
+          value: "/downloads"
+        # this one is applied by the guesspath.sh script
+        - name: TRANSMISSION__MEDIAS_DIR
+          value: "/medias"
         - name: TRANSMISSION__DOWNLOAD_QUEUE_ENABLED
           value: "false"
         - name: TRANSMISSION__RENAME_PARTIAL_FILES
@@ -29,8 +34,8 @@ spec:
           value: "false"
         - name: TRANSMISSION__SCRIPT_TORRENT_ADDED_ENABLED
           value: "true"
-        # - name: TRANSMISSION__SCRIPT_TORRENT_ADDED_FILENAME
-        #   value: "scripts/guesspath"
+        - name: TRANSMISSION__SCRIPT_TORRENT_ADDED_FILENAME
+          value: "/scripts/guesspath.sh"
         - name: TRANSMISSION__RPC_PORT
           value: "9091"
         - name: TRANSMISSION__PEER_PORT
@@ -50,14 +55,23 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
+        - name: scripts
+          mountPath: /scripts
         - name: downloads
           mountPath: /downloads
         - name: medias
           mountPath: /medias
+      - name: guessit
+        image: nixery.dev/shell/shell2http/python313packages.guessit
+        command: ["shell2http", "-form", "/", 'guessit -P title "$v_title"']
       volumes:
       - name: config
         persistentVolumeClaim:
           claimName: config
+      - name: scripts
+        configMap:
+          name: scripts
+          defaultMode: 0555
       - name: medias
         persistentVolumeClaim:
           claimName: medias

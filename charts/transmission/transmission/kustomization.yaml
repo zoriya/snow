@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+labels:
+- includeSelectors: true
+  pairs:
+    app.kubernetes.io/component: transmission
+
+configMapGenerator:
+- name: scripts
+  files:
+  - ./guesspath.sh
+
+resources:
+- ./deployment.yaml
+- ./service.yaml
+- ./secrets.yaml
+- ./pv-config.yaml
