@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: meelo-music
+  name: meelo-musics
 spec:
   accessModes:
   - ReadWriteOnce
@@ -12,16 +12,16 @@ spec:
     fsType: zfs
     volumeAttributes:
       openebs.io/poolname: ocean
-    volumeHandle: "music"
+    volumeHandle: "musics"
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: music
+  name: musics
 spec:
   storageClassName: ""
-  volumeName: meelo-music
+  volumeName: meelo-musics
   accessModes:
   - ReadWriteOnce
   resources:
