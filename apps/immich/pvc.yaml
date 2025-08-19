@@ -21,7 +21,7 @@ metadata:
   name: pictures
 spec:
   storageClassName: ""
-  volumeName: transmission-pictures
+  volumeName: immich-pictures
   accessModes:
   - ReadWriteOnce
   resources:

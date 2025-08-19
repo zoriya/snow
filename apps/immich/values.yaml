@@ -23,3 +23,7 @@ server:
       - secretName: immich-tls
         hosts:
         - immich.sdg.moe
+machine-learning:
+  persistence:
+    cache:
+      type: pvc
