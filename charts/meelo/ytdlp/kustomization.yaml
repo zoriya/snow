@@ -7,7 +7,7 @@ labels:
     app.kubernetes.io/component: ytdlp
 
 configMapGenerator:
-  - name: scripts
+  - name: sync-scripts
     files:
     - ./ytdlp-sync.sh
 
