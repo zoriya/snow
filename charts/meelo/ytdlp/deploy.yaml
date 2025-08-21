@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smartrss
+spec:
+  template:
+    spec:
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        fsGroupChangePolicy: OnRootMismatch
+      containers:
+      - name: smartrss
+        image: nixery.dev/shell/yt-dlp
+        command: [/app/ytdlp-sync.sh]
+        env:
+        - name: URL
+          valueFrom:
+            secretKeyRef:
+              name: yt-playlist
+              key: url
+        volumeMounts:
+        - name: scripts
+          mountPath: /app
+          readOnly: true
+        - name: musics
+          mountPath: /musics
+      volumes:
+      - name: scripts
+        configMap:
+          name: scripts
+          defaultMode: 0555
+      - name: musics
+        persistentVolumeClaim:
+          claimName: musics
+

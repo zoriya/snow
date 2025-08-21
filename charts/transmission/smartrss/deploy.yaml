@@ -47,5 +47,4 @@ spec:
           defaultMode: 0555
       - name: medias
         persistentVolumeClaim:
-          # TODO: use medias once i actually have some :c
-          claimName: downloads
+          claimName: medias
