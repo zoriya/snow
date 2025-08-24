@@ -1,0 +1,113 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitea
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitea
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  source:
+    repoURL: https://dl.gitea.com/charts/
+    chart: gitea
+    targetRevision: 12.2.0
+    helm:
+      valuesObject:
+        gitea:
+          config:
+            database:
+              DB_TYPE: postgresql
+              HOST: postgres-cluster-rw.postgres
+              NAME: gitea
+              USER: gitea
+              PASSWD: gitea
+              SCHEMA: gitea
+            service:
+              DISABLE_REGISTRATION: false
+              ALLOW_ONLY_EXTERNAL_REGISTRATION: true
+              SHOW_REGISTRATION_BUTTON: false
+              DEFAULT_ALLOW_CREATE_ORGANIZATION: false
+              DEFAULT_USER_IS_RESTRICTED: true
+          admin:
+            username: gitea-admin
+            existingSecret: gitea-admin
+          oauth:
+          - name: "MyAwesomeGiteaOAuth"
+            provider: "openidConnect"
+            key: "hello"
+            secret: "world"
+            autoDiscoverUrl: "https://gitea.example.com/.well-known/openid-configuration"
+            #useCustomUrls:
+            #customAuthUrl:
+            #customTokenUrl:
+            #customProfileUrl:
+            #customEmailUrl:
+        ingress:
+          enabled: true
+          ingressClassName: cilium
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt
+            acme.cert-manager.io/http01-edit-in-place: "true"
+          hosts:
+          - host: gitea.sdg.moe
+            paths:
+            - path: /
+              pathType: Prefix
+          tls:
+          - hosts:
+              - gitea.sdg.moe
+            secretName: gitea-ssl
+        valkey-cluster:
+          enabled: false
+        postgresql-ha:
+          enabled: false
+        persistence:
+          enabled: true
+          claimName: gitea-projects
+        extraDeploy:
+        - apiVersion: postgresql.cnpg.io/v1
+          kind: Database
+          metadata:
+            name: gitea-db
+            namespace: postgres
+          spec:
+            name: gitea
+            owner: gitea
+            cluster:
+              name: postgres-cluster
+            databaseReclaimPolicy: delete
+
+        - apiVersion: cert-manager.io/v1
+          kind: Certificate
+          metadata:
+            name: postgres-gitea
+          spec:
+            secretName: postgres-gitea
+            usages:
+              - client auth
+            # same as pg user
+            commonName: gitea
+            issuerRef:
+              name: postgres-ca
+              kind: ClusterIssuer
+              group: cert-manager.io
+
+        - apiVersion: external-secrets.io/v1
+          kind: ExternalSecret
+          metadata:
+            name: gitea-admin
+          spec:
+            refreshInterval: 1h
+            dataFrom:
+            - sourceRef:
+                generatorRef:
+                  apiVersion: generators.external-secrets.io/v1alpha1
+                  kind: ClusterGenerator
+                  name: password

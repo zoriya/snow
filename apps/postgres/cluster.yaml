@@ -31,3 +31,6 @@ spec:
     - name: atuin
       login: true
       disablePassword: true
+    - name: gitea
+      login: true
+      disablePassword: true
