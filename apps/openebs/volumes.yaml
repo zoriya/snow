@@ -53,3 +53,17 @@ spec:
   shared: "yes"
 status:
   state: Ready
+---
+apiVersion: zfs.openebs.io/v1
+kind: ZFSVolume
+metadata:
+  name: projects
+spec:
+  capacity: 16Ti
+  fsType: zfs
+  ownerNodeID: kadan
+  poolName: ocean
+  volumeType: DATASET
+  shared: "yes"
+status:
+  state: Ready
