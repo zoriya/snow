@@ -1,0 +1,32 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: immich-oidc
+spec:
+  refreshInterval: 24h
+  secretStoreRef:
+    name: bitwarden
+    kind: ClusterSecretStore
+  target:
+    template:
+      engineVersion: v2
+      data:
+        "config.yaml": |-
+          oauth:
+            enabled: true
+            buttonText: Login with OAuth
+            clientId: "{{ .clientId }}"
+            clientSecret: "{{ .clientSecret }}"
+            defaultStorageQuota: 0
+            issuerUrl: https://authentik.sdg.moe/application/o/immich/.well-known/openid-configuration
+            scope: openid email profile
+            signingAlgorithm: RS256
+            profileSigningAlgorithm: none
+            storageLabelClaim: preferred_username
+            storageQuotaClaim: immich_quota
+            autoLaunch: true
+          passwordLogin:
+            enabled: false
+  dataFrom:
+  - extract:
+      key: immich-sso

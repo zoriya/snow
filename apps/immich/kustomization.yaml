@@ -2,12 +2,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 helmCharts:
-- repo: oci://ghcr.io/immich-app/immich-charts
-  name: immich
-  releaseName: immich
-  version: 0.9.3
-  valuesFile: values.yaml
+  - repo: oci://ghcr.io/immich-app/immich-charts
+    name: immich
+    releaseName: immich
+    namespace: immich
+    version: 0.9.3
+    valuesFile: values.yaml
 
 resources:
-- pvc.yaml
-- cluster.yaml
+  - pvc.yaml
+  - database.yaml
+  - oidc.yaml

@@ -1,0 +1,34 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: immich
+  namespace: postgres
+spec:
+  name: immich
+  owner: immich
+  cluster:
+    name: postgres-cluster
+  extensions:
+  - name: vector
+    ensure: present
+  - name: vchord
+    ensure: present
+  - name: cube
+    ensure: present
+  - name: earthdistance
+    ensure: present
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-immich
+spec:
+  secretName: postgres-immich
+  usages:
+  - client auth
+  # same as pg user
+  commonName: immich
+  issuerRef:
+    name: postgres-ca
+    kind: ClusterIssuer
+    group: cert-manager.io

@@ -9,6 +9,9 @@ spec:
   storage:
     size: 10Gi
 
+  backup:
+    retentionPolicy: 7d
+
   certificates:
     serverCASecret: postgres-server-cert
     serverTLSSecret: postgres-server-cert
@@ -18,10 +21,13 @@ spec:
     pg_hba:
       - hostssl all all all cert
 
-  backup:
-    retentionPolicy: 7d
+  # this is needed for immich
+    shared_preload_libraries:
+    - "vchord.so"
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:17.5-0.3.0
 
-  # this is here because no `Role` crd exsists yet.
+
+  # this is here because no `Role` crd exists yet.
   # see https://github.com/cloudnative-pg/cloudnative-pg/issues/5341
   managed:
     roles:
@@ -32,5 +38,8 @@ spec:
       login: true
       disablePassword: true
     - name: gitea
+      login: true
+      disablePassword: true
+    - name: immich
       login: true
       disablePassword: true
