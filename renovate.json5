@@ -19,5 +19,18 @@
 		"managerFilePatterns": [
 			"/apps/.+\\.yaml$/"
 		]
-	}
+	},
+	"regexManagers": [
+		{
+			"description": "Update docker image references",
+			"managerFilePatterns": [
+				"/\\.yaml$/",
+				"/\\.yml$/"
+			],
+			"matchStrings": [
+				"image: (?<depName>.*?):(?<currentValue>.*?)\\s+"
+			],
+			"datasourceTemplate": "docker"
+		}
+	]
 }
