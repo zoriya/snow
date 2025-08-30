@@ -65,7 +65,8 @@ spec:
           enabled: false
         persistence:
           enabled: true
-          claimName: gitea-projects
+          create: false
+          claimName: projects
         extraVolumes:
         - name: postgres-ssl
           secret:
@@ -112,6 +113,35 @@ spec:
               name: postgres-ca
               kind: ClusterIssuer
               group: cert-manager.io
+
+        - apiVersion: v1
+          kind: PersistentVolume
+          metadata:
+            name: gitea-projects
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            capacity:
+              storage: 200Ti
+            csi:
+              driver: zfs.csi.openebs.io
+              fsType: zfs
+              volumeAttributes:
+                openebs.io/poolname: ocean
+              volumeHandle: "projects"
+            persistentVolumeReclaimPolicy: Retain
+        - apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+            name: projects
+          spec:
+            storageClassName: ""
+            volumeName: gitea-projects
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 200Ti
 
         - apiVersion: external-secrets.io/v1
           kind: ExternalSecret
