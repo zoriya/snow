@@ -3,6 +3,10 @@
 	"extends": [
 		"config:recommended"
 	],
+	"rebaseWhen": "conflicted",
+	"suppressNotifications": [
+		"prIgnoreNotification"
+	],
 	"ignoreTests": true,
 	"packageRules": [
 		{
@@ -17,20 +21,26 @@
 	],
 	"argocd": {
 		"managerFilePatterns": [
-			"/apps/.+\\.yaml$/"
-		]
+			"/apps/.+\\.ya?ml$/"
+		],
 	},
-	"regexManagers": [
+	"kubernetes": {
+		"managerFilePatterns": [
+			"/\\.ya?ml$/"
+		],
+	},
+	"customManagers": [
 		{
-			"description": "Update docker image references",
+			"customType": "regex",
+			"description": "Process custom dependencies",
 			"managerFilePatterns": [
-				"/\\.yaml$/",
-				"/\\.yml$/"
+				"/\\.ya?ml$/"
 			],
 			"matchStrings": [
-				"image: (?<depName>.*?):(?<currentValue>.*?)\\s+"
+				"datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?\"(?<currentValue>.*)\"\n"
 			],
-			"datasourceTemplate": "docker"
+			"datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+			"versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
 		}
-	]
+	],
 }
