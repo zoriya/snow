@@ -6,7 +6,7 @@ helmCharts:
   name: openebs
   namespace: openebs
   releaseName: openebs
-  version: v4.3.2
+  version: 4.3.3
   valuesFile: values.yaml
 
 resources:
