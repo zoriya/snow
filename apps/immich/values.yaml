@@ -31,6 +31,8 @@ machine-learning:
   persistence:
     cache:
       type: pvc
+  controller:
+    strategy: Recreate
 
 env:
   DB_URL: postgres://immich@postgres-cluster-rw.postgres/immich?sslcert=/pg/tls.crt&sslkey=/pg/tls.key&sslrootcert=/pg/ca.crt
