@@ -9,7 +9,6 @@ parameters:
   recordsize: 128k
   compression: "off"
   dedup: "off"
-  shared: "yes"
   fstype: zfs
   poolname: tank
 provisioner: zfs.csi.openebs.io
