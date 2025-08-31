@@ -19,11 +19,18 @@ spec:
         env:
         - name: OUT
           value: /musics
+        - name: LIVES_OUT
+          value: /musics/lives
         - name: URL
           valueFrom:
             secretKeyRef:
               name: ytdlp
               key: url
+        - name: LIVES_URL
+          valueFrom:
+            secretKeyRef:
+              name: ytdlp
+              key: livesUrl
         volumeMounts:
         - name: scripts
           mountPath: /app
