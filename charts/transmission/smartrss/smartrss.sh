@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 
 rsstail -f '{title}---{link}\n' "$URL" | while IFS="---" read -r title link; do
     name=$(guessit "$title" -P title | tr -d "[:punct:]")
