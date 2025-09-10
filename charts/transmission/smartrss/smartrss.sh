@@ -6,6 +6,6 @@ rsstail -f '{title}---{link}\n' "$URL" | while IFS="---" read -r title link; do
 
     # shellcheck disable=SC2012
     if ls /medias | tr -d "[:punct:]" | grep -qix "$name"; then
-        transmission-remote "$TRURL" --auth "$TRUSER:$TRPASS" -a "$link" -w "$name"
+        transmission-remote "$TRURL" --auth "$TRUSER:$TRPASS" -a "$link" -w "/medias/$name"
     fi
 done
