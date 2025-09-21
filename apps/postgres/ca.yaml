@@ -11,6 +11,7 @@ spec:
   secretTemplate:
     labels:
       cnpg.io/reload: ""
+  duration: 87660h # 10 years, this is needed until https://github.com/cert-manager/cert-manager/issues/2478
   privateKey:
     algorithm: ECDSA
     size: 256
