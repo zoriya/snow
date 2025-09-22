@@ -1,0 +1,60 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: yt-dlp
+spec:
+  schedule: "@daily"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          securityContext:
+            fsGroup: 1001
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+            fsGroupChangePolicy: OnRootMismatch
+          restartPolicy: OnFailure
+          containers:
+            - name: ytdlp
+              image: nixery.dev/shell/yt-dlp
+              workingDir: /work
+              command: [/app/ytdlp-sync.sh]
+              env:
+                - name: OUT
+                  value: /musics
+                - name: LIVES_OUT
+                  value: /musics/lives
+                - name: URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: ytdlp
+                      key: url
+                - name: LIVES_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: ytdlp
+                      key: livesUrl
+              volumeMounts:
+                - name: scripts
+                  mountPath: /app
+                  readOnly: true
+                - name: cookies
+                  mountPath: /app/secrets
+                - name: work
+                  mountPath: /work
+                - name: musics
+                  mountPath: /musics
+          volumes:
+            - name: scripts
+              configMap:
+                name: sync-scripts
+                defaultMode: 0555
+            - name: musics
+              persistentVolumeClaim:
+                claimName: musics
+            - name: work
+              emptyDir: {}
+            - name: cookies
+              secret:
+                secretName: ytdlp

@@ -12,5 +12,5 @@ configMapGenerator:
   - ./mirror.sh
 
 resources:
-- deploy.yaml
+- job.yaml
 - secret.yaml

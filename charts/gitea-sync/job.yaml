@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: gitea-sync
+spec:
+  schedule: "@daily"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: sync
+              image: nixery.dev/shell/curl/jq
+              command:
+                - /app/mirror.sh
+                - -m
+                - user
+                - -u
+                - zoriya
+              env:
+                - name: GITEA_URL
+                  value: http://gitea-http.gitea.svc:3000
+                - name: ACCESS_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: gitea-sync
+                      key: gitea-token
+                - name: GITHUB_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: gitea-sync
+                      key: github-token
+              volumeMounts:
+                - name: scripts
+                  mountPath: /app
+          volumes:
+            - name: scripts
+              configMap:
+                name: scripts
+                defaultMode: 0555

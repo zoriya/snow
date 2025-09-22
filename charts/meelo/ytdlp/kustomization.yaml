@@ -12,5 +12,5 @@ configMapGenerator:
     - ./ytdlp-sync.sh
 
 resources:
-- ./deploy.yaml
+- ./job.yaml
 - ./secret.yaml
