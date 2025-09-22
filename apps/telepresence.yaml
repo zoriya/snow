@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: telepresence
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: telepresence
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: ghcr.io/telepresenceio
+    chart: telepresence-oss
+    targetRevision: 2.24.1
+    helm:
+      releaseName: traffic-manager
+      valuesObject: {}
