@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy
+spec:
+  template:
+    spec:
+      containers:
+        - name: proxy
+          image: alpine
+          command:
+            - sleep
+            - infinitely
+          ports:
+            - name: http
+              containerPort: 8080
