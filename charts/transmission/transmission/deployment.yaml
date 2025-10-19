@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: transmission
 spec:
+  strategy:
+    type: Recreate
   template:
     spec:
       securityContext:
@@ -12,69 +14,69 @@ spec:
         runAsNonRoot: true
         fsGroupChangePolicy: OnRootMismatch
       containers:
-      - name: transmission
-        image: ghcr.io/home-operations/transmission:4.0.6
-        env:
-        - name: TRANSMISSION__UMASK
-          value: "002"
-        - name: TRANSMISSION__INCOMPLETE_DIR_ENABLED
-          value: "true"
-        - name: TRANSMISSION__DOWNLOAD_DIR
-          value: "/downloads"
-        - name: TRANSMISSION__INCOMPLETE_DIR
-          value: "/downloads"
-        # this one is applied by the guesspath.sh script
-        - name: TRANSMISSION__MEDIAS_DIR
-          value: "/medias"
-        - name: TRANSMISSION__DOWNLOAD_QUEUE_ENABLED
-          value: "false"
-        - name: TRANSMISSION__RENAME_PARTIAL_FILES
-          value: "false"
-        - name: TRANSMISSION__TRASH_CAN_ENABLED
-          value: "false"
-        - name: TRANSMISSION__SCRIPT_TORRENT_ADDED_ENABLED
-          value: "true"
-        - name: TRANSMISSION__SCRIPT_TORRENT_ADDED_FILENAME
-          value: "/scripts/guesspath.sh"
-        - name: TRANSMISSION__RPC_PORT
-          value: "9091"
-        - name: TRANSMISSION__PEER_PORT
-          value: "27071"
-        - name: TRANSMISSION__RPC_AUTHENTICATION_REQUIRED
-          value: "true"
-        - name: TRANSMISSION__RPC_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: transmission
-              key: username
-        - name: TRANSMISSION__RPC_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: transmission
-              key: password
-        volumeMounts:
-        - name: config
-          mountPath: /config
-        - name: scripts
-          mountPath: /scripts
-        - name: downloads
-          mountPath: /downloads
-        - name: medias
-          mountPath: /medias
-      - name: guessit
-        image: nixery.dev/shell/shell2http/python313packages.guessit
-        command: ["shell2http", "-form", "/", 'guessit -P title "$v_title"']
+        - name: transmission
+          image: ghcr.io/home-operations/transmission:4.0.6
+          env:
+            - name: TRANSMISSION__UMASK
+              value: "002"
+            - name: TRANSMISSION__INCOMPLETE_DIR_ENABLED
+              value: "true"
+            - name: TRANSMISSION__DOWNLOAD_DIR
+              value: "/downloads"
+            - name: TRANSMISSION__INCOMPLETE_DIR
+              value: "/downloads"
+            # this one is applied by the guesspath.sh script
+            - name: TRANSMISSION__MEDIAS_DIR
+              value: "/medias"
+            - name: TRANSMISSION__DOWNLOAD_QUEUE_ENABLED
+              value: "false"
+            - name: TRANSMISSION__RENAME_PARTIAL_FILES
+              value: "false"
+            - name: TRANSMISSION__TRASH_CAN_ENABLED
+              value: "false"
+            - name: TRANSMISSION__SCRIPT_TORRENT_ADDED_ENABLED
+              value: "true"
+            - name: TRANSMISSION__SCRIPT_TORRENT_ADDED_FILENAME
+              value: "/scripts/guesspath.sh"
+            - name: TRANSMISSION__RPC_PORT
+              value: "9091"
+            - name: TRANSMISSION__PEER_PORT
+              value: "27071"
+            - name: TRANSMISSION__RPC_AUTHENTICATION_REQUIRED
+              value: "true"
+            - name: TRANSMISSION__RPC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: transmission
+                  key: username
+            - name: TRANSMISSION__RPC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: transmission
+                  key: password
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: scripts
+              mountPath: /scripts
+            - name: downloads
+              mountPath: /downloads
+            - name: medias
+              mountPath: /medias
+        - name: guessit
+          image: nixery.dev/shell/shell2http/python313packages.guessit
+          command: ["shell2http", "-form", "/", 'guessit -P title "$v_title"']
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: config
-      - name: scripts
-        configMap:
-          name: scripts
-          defaultMode: 0555
-      - name: medias
-        persistentVolumeClaim:
-          claimName: medias
-      - name: downloads
-        persistentVolumeClaim:
-          claimName: downloads
+        - name: config
+          persistentVolumeClaim:
+            claimName: config
+        - name: scripts
+          configMap:
+            name: scripts
+            defaultMode: 0555
+        - name: medias
+          persistentVolumeClaim:
+            claimName: medias
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: downloads
