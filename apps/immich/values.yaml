@@ -1,10 +1,8 @@
-image:
-  # renovate: datasource=github-releases depName=immich-app/immich
-  tag: "v2.2.1"
 immich:
   persistence:
     library:
       existingClaim: pictures
+
 valkey:
   enabled: true
 
@@ -28,15 +26,24 @@ server:
             - immich.sdg.moe
 
 machine-learning:
+  controllers:
+    main:
+      strategy: Recreate
   persistence:
     cache:
       type: persistentVolumeClaim
-  controller:
-    strategy: Recreate
 
-env:
-  DB_URL: postgres://immich@postgres-cluster-rw.postgres/immich?sslcert=/pg/tls.crt&sslkey=/pg/tls.key&sslrootcert=/pg/ca.crt
-  IMMICH_CONFIG_FILE: /config/config.yaml
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          # renovate: datasource=github-releases depName=immich-app/immich
+          tag: "v2.2.1"
+        env:
+          DB_URL: postgres://immich@postgres-cluster-rw.postgres/immich?sslcert=/pg/tls.crt&sslkey=/pg/tls.key&sslrootcert=/pg/ca.crt
+          IMMICH_CONFIG_FILE: /config/config.yaml
+
 persistence:
   pg:
     enabled: true
