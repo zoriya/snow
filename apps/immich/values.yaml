@@ -5,7 +5,7 @@ immich:
   persistence:
     library:
       existingClaim: pictures
-redis:
+valkey:
   enabled: true
 
 server:
@@ -30,7 +30,7 @@ server:
 machine-learning:
   persistence:
     cache:
-      type: pvc
+      type: persistentVolumeClaim
   controller:
     strategy: Recreate
 
