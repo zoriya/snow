@@ -7,7 +7,7 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: clickhouse-operator
+    namespace: clickhouse
   syncPolicy:
     automated:
       prune: true
@@ -21,4 +21,6 @@ spec:
     chart: altinity-clickhouse-operator
     targetRevision: 0.25.5
     helm:
-      valuesObject: {}
+      valuesObject:
+        rbac:
+          namespaceScoped: true
