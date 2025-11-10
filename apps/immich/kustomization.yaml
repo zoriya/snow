@@ -6,7 +6,7 @@ helmCharts:
     name: immich
     releaseName: immich
     namespace: immich
-    version: 0.10.1
+    version: 0.10.2
     valuesFile: values.yaml
 
 resources:
