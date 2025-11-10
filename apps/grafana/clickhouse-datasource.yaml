@@ -1,0 +1,28 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: clickhouse
+spec:
+  valuesFrom:
+  - targetPath: "secureJsonData.password"
+    valueFrom:
+      secretKeyRef:
+        name: clickhouse-passwords
+        key: grafana
+  datasource:
+    name: clickhouse
+    type: grafana-clickhouse-datasource
+    jsonData:
+      host: clickhouse-otel-cluster.otel.svc.cluster.local
+      port: 9000
+      username: grafana
+      defaultDatabase: otel
+      protocol: native
+    secureJsonData:
+      password: ${grafana}
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  plugins:
+    - name: grafana-clickhouse-datasource
+      version: 4.11.2
