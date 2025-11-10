@@ -6,17 +6,17 @@ spec:
   mode: daemonset
   config:
     receivers:
-      hostmetrics:
-        scrapers:
-          cpu:
-          disk:
-          filesystem:
-          load:
-          memory:
-          network:
-          process:
-          processes:
-          paging:
+      # hostmetrics:
+      #   scrapers:
+      #     cpu:
+      #     disk:
+      #     filesystem:
+      #     load:
+      #     memory:
+      #     network:
+      #     process:
+      #     processes:
+      #     paging:
       otlp:
         protocols:
           grpc:
@@ -53,7 +53,7 @@ spec:
           processors: [memory_limiter, batch]
           exporters: [debug]
         metrics:
-          receivers: [otlp, hostmetrics]
+          receivers: [otlp] #[otlp, hostmetrics]
           processors: [memory_limiter, batch]
           exporters: [debug]
         logs:
