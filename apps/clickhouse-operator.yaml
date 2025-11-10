@@ -7,7 +7,8 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: clickhouse
+    # i don't wanna deal with making this cluster scoped
+    namespace: otel
   syncPolicy:
     automated:
       prune: true

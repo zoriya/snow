@@ -35,7 +35,24 @@ spec:
         timeout: 5s
 
     exporters:
-      debug: {}
+      debug:
+        verbosity: detailed
+      clickhouse:
+        endpoint: tcp://clickhouse-otel-cluster:9000?dial_timeout=10s&compress=lz4&async_insert=1
+        ttl: 168h # a week
+        traces_table_name: otel_traces
+        logs_table_name: otel_logs
+        create_schema: true
+        timeout: 5s
+        database: default
+        sending_queue:
+          queue_size: 1000
+        retry_on_failure:
+          enabled: true
+          initial_interval: 5s
+          max_interval: 30s
+          max_elapsed_time: 300s
+
 
     extensions:
       health_check:
@@ -51,12 +68,12 @@ spec:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [debug]
+          exporters: [debug, clickhouse]
         metrics:
           receivers: [otlp] #[otlp, hostmetrics]
           processors: [memory_limiter, batch]
-          exporters: [debug]
+          exporters: [debug, clickhouse]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [debug]
+          exporters: [debug, clickhouse]
