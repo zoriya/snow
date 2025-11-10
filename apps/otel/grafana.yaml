@@ -7,6 +7,7 @@ metadata:
 spec:
   config:
     log:
+      level: debug
       mode: "console"
     auth:
       disable_login_form: "false"
@@ -24,7 +25,8 @@ spec:
       auth_url: "https://authentik.sdg.moe/application/o/authorize/"
       token_url: "https://authentik.sdg.moe/application/o/token/"
       api_url: "https://authentik.sdg.moe/application/o/userinfo/"
-      role_attribute_path: 'Admin' #contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+      role_attribute_path: contains(groups[*], 'admins') && 'GrafanaAdmin' || 'Editor'
+      allow_assign_grafana_admin: "true"
 
   persistentVolumeClaim:
     spec:
