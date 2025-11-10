@@ -1,0 +1,93 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyoo-v5
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyoo-next
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  source:
+    repoURL: https://github.com/acelinkio/kyoo
+    path: chart
+    targetRevision: prepare_traefik
+    # repoURL: ghcr.io/zoriya/helm-charts
+    # chart: kyoo
+    # targetRevision: edge
+    helm:
+      valuesObject:
+        global:
+          image:
+            tag: edge
+            imagePullPolicy: Always
+          postgres:
+            kyoo_auth:
+              host: kyoo-v5-postgres
+            kyoo_api:
+              host: kyoo-v5-postgres
+            kyoo_scanner:
+              host: kyoo-v5-postgres
+            kyoo_transcoder:
+              host: kyoo-v5-postgres
+        postgres:
+          enabled: true
+        kyoo:
+          address: https://beta.sdg.moe
+          transcoderAcceleration: nvidia
+        transcoder:
+          runtimeClass: nvidia
+        ingress:
+          enabled: true
+          host: beta.sdg.moe
+          ingressClassName: cilium
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt
+            acme.cert-manager.io/http01-edit-in-place: "true"
+          tls: true
+          tlsSecret: kyoo-tls
+        extraObjects:
+          - apiVersion: v1
+            kind: Secret
+            metadata:
+              name: bigsecret
+            type: Opaque
+            stringData:
+              postgres_user: kyoo_all
+              postgres_password: watchSomething4me
+              scanner_apikey: scanner-triquarter4u
+
+          - apiVersion: v1
+            kind: PersistentVolume
+            metadata:
+              name: kyoo-v5-medias
+            spec:
+              accessModes:
+              - ReadWriteOnce
+              capacity:
+                storage: 200Ti
+              csi:
+                driver: zfs.csi.openebs.io
+                fsType: zfs
+                volumeAttributes:
+                  openebs.io/poolname: ocean
+                volumeHandle: "medias"
+              persistentVolumeReclaimPolicy: Retain
+          - apiVersion: v1
+            kind: PersistentVolumeClaim
+            metadata:
+              name: media
+            spec:
+              storageClassName: ""
+              volumeName: kyoo-v5-medias
+              accessModes:
+              - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 200Ti
