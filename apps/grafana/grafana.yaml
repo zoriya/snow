@@ -1,0 +1,85 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana
+  labels:
+    dashboards: "grafana"
+spec:
+  config:
+    log:
+      mode: "console"
+    auth:
+      disable_login_form: "false"
+      signout_redirect_url: "https://authentik.sdg.moe/application/o/grafana/end-session/"
+      oauth_auto_login: "true"
+    server:
+      root_url: https://grafana.sdg.moe
+    auth.generic_oauth:
+      name: authentik
+      enabled: "true"
+      allow_sign_up: "true"
+      client_id: ${AUTH_CLIENT_ID}
+      client_secret: ${AUTH_CLIENT_SECRET}
+      scopes: "openid profile email"
+      auth_url: "https://authentik.sdg.moe/application/o/authorize/"
+      token_url: "https://authentik.sdg.moe/application/o/token/"
+      api_url: "https://authentik.sdg.moe/application/o/userinfo/"
+      role_attribute_path: 'Admin' #contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+
+  persistentVolumeClaim:
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+  deployment:
+    spec:
+      template:
+        spec:
+          securityContext:
+            fsGroup: 10001
+          containers:
+            - name: grafana
+              env:
+                - name: AUTH_CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana-oidc
+                      key: clientId
+                - name: AUTH_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana-oidc
+                      key: clientSecret
+              readinessProbe:
+                failureThreshold: 3
+          volumes:
+            - name: grafana-data
+              persistentVolumeClaim:
+                claimName: grafana-pvc
+      strategy:
+        type: Recreate
+
+  ingress:
+    metadata:
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt
+        acme.cert-manager.io/http01-edit-in-place: "true"
+    spec:
+      ingressClassName: cilium
+      rules:
+        - host: grafana.sdg.moe
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: grafana-service
+                    port:
+                      number: 3000
+      tls:
+        - hosts:
+            - grafana.sdg.moe
+          secretName: grafana-ssl

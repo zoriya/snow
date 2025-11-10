@@ -1,0 +1,12 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: grafana-oidc
+spec:
+  refreshInterval: 24h
+  secretStoreRef:
+    name: bitwarden
+    kind: ClusterSecretStore
+  dataFrom:
+  - extract:
+      key: grafana-sso
