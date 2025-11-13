@@ -11,6 +11,7 @@ spec:
         key: grafana
   datasource:
     name: clickhouse
+    access: proxy
     type: grafana-clickhouse-datasource
     jsonData:
       host: clickhouse-otel-cluster.otel.svc.cluster.local
