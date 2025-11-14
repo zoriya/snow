@@ -18,18 +18,7 @@ spec:
                 name: otel-collector
                 port:
                   name: otlp-http
-    - host: otel-grpc.sdg.moe
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: otel-collector
-                port:
-                  name: otlp-grpc
   tls:
     - hosts:
         - otel.sdg.moe
-        - otel-grpc.sdg.moe
       secretName: otel-ssl

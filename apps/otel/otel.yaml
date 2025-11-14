@@ -5,11 +5,24 @@ metadata:
 spec:
   mode: daemonset
   env:
-  - name: CLICKHOUSE_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: clickhouse-passwords
-        key: collector
+    - name: CLICKHOUSE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: clickhouse-passwords
+          key: collector
+
+  volumes:
+    - name: htpasswd
+      secret:
+        secretName: otel-basicauth
+        items:
+          - key: .htpasswd
+            path: .htpasswd
+  volumeMounts:
+    - name: htpasswd
+      mountPath: .htpasswd
+      subPath: .htpasswd
+
   config:
     receivers:
       # hostmetrics:
@@ -25,10 +38,10 @@ spec:
       #     paging:
       otlp:
         protocols:
-          grpc:
-            endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
+            auth:
+              authenticator: basicauth
 
     processors:
       memory_limiter:
@@ -66,14 +79,17 @@ spec:
         endpoint: 0.0.0.0:1777
       zpages:
         endpoint: 0.0.0.0:55679
+      basicauth:
+        htpasswd:
+          file: .htpasswd
 
     service:
-      extensions: [health_check, pprof, zpages]
+      extensions: [basicauth, health_check, pprof, zpages]
       pipelines:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [debug, clickhouse]
+          exporters: [clickhouse]
         metrics:
           receivers: [otlp] #[otlp, hostmetrics]
           processors: [memory_limiter, batch]
@@ -81,4 +97,4 @@ spec:
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [debug, clickhouse]
+          exporters: [clickhouse]

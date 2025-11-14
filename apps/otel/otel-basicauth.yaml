@@ -1,0 +1,12 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: otel-basicauth
+spec:
+  refreshInterval: 24h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: bitwarden
+  dataFrom:
+    - extract:
+        key: otel-basicauth
