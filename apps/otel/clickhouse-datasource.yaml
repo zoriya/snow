@@ -12,6 +12,7 @@ spec:
   datasource:
     name: clickhouse
     access: proxy
+    isDefault: true
     type: grafana-clickhouse-datasource
     jsonData:
       host: clickhouse-otel-cluster.otel.svc.cluster.local
@@ -19,6 +20,16 @@ spec:
       username: grafana
       defaultDatabase: otel
       protocol: native
+      logs:
+        defaultDatabase: otel
+        defaultTable: otel_logs
+        otelEnabled: true
+        otelVersion: latest
+      traces:
+        defaultDatabase: otel
+        defaultTable: otel_traces
+        otelEnabled: true
+        otelVersion: latest
     secureJsonData:
       password: ${grafana}
   instanceSelector:
