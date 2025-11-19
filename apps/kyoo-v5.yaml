@@ -15,9 +15,9 @@ spec:
     syncOptions:
     - CreateNamespace=true
   source:
-    repoURL: https://github.com/acelinkio/kyoo
+    repoURL: https://github.com/zoriya/Kyoo
     path: chart
-    targetRevision: prepare_traefik
+    targetRevision: master
     # repoURL: ghcr.io/zoriya/helm-charts
     # chart: kyoo
     # targetRevision: edge
@@ -28,13 +28,7 @@ spec:
             tag: edge
             imagePullPolicy: Always
           postgres:
-            kyoo_auth:
-              host: kyoo-v5-postgres
-            kyoo_api:
-              host: kyoo-v5-postgres
-            kyoo_scanner:
-              host: kyoo-v5-postgres
-            kyoo_transcoder:
+            shared:
               host: kyoo-v5-postgres
         postgres:
           enabled: true
