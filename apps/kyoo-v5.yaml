@@ -40,6 +40,13 @@ spec:
         kyoo:
           address: https://beta.sdg.moe
           transcoderAcceleration: nvidia
+          auth:
+            apikeys:
+              extra:
+                - name: admin
+                  existingSecret: admin-apikey
+                  apikeyKey: uuid
+                  claims: '{"permissions": ["users.read", "users.write", "apikeys.read", "apikeys.write", "users.delete", "core.read", "core.write", "core.play", "scanner.trigger"], "verified": true}'
         transcoder:
           runtimeClass: nvidia
         ingress:
@@ -90,3 +97,16 @@ spec:
               resources:
                 requests:
                   storage: 200Ti
+
+          - apiVersion: external-secrets.io/v1
+            kind: ExternalSecret
+            metadata:
+              name: admin-apikey
+            spec:
+              refreshPolicy: CreatedOnce
+              dataFrom:
+                - sourceRef:
+                    generatorRef:
+                      apiVersion: generators.external-secrets.io/v1alpha1
+                      kind: ClusterGenerator
+                      name: uuid
