@@ -13,7 +13,7 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
   source:
     repoURL: https://github.com/zoriya/Kyoo
     path: chart
@@ -30,6 +30,11 @@ spec:
           postgres:
             shared:
               host: kyoo-v5-postgres
+          extraEnv:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://otel-collector.otel.svc:4317"
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "grpc"
         postgres:
           enabled: true
         kyoo:
@@ -63,7 +68,7 @@ spec:
               name: kyoo-v5-medias
             spec:
               accessModes:
-              - ReadWriteOnce
+                - ReadWriteOnce
               capacity:
                 storage: 200Ti
               csi:
@@ -81,7 +86,7 @@ spec:
               storageClassName: ""
               volumeName: kyoo-v5-medias
               accessModes:
-              - ReadWriteOnce
+                - ReadWriteOnce
               resources:
                 requests:
                   storage: 200Ti
