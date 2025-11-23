@@ -37,6 +37,8 @@ spec:
               value: "grpc"
         postgres:
           enabled: true
+          persistence:
+            size: 16Gi
         kyoo:
           address: https://beta.sdg.moe
           transcoderAcceleration: nvidia
