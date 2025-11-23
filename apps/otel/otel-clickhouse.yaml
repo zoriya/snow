@@ -4,6 +4,9 @@ metadata:
   name: otel-cluster
 spec:
   configuration:
+    settings:
+      logger/size: "500M"
+      logger/count: 1
     clusters:
       - name: otel-cluster
         layout:
