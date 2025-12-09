@@ -67,22 +67,22 @@ spec:
               - "--log.format=json"
               - "--log.otlp.grpc=true"
               - "--log.otlp.grpc.insecure=true"
-              - "--log.otlp.grpc.endpoint=otel-collector.otel.svc::4317"
+              - "--log.otlp.grpc.endpoint=otel-collector.otel.svc:4317"
               - "--accesslog=true"
               - "--accesslog.format=json"
               - "--accesslog.otlp.grpc=true"
               - "--accesslog.otlp.grpc.insecure=true"
-              - "--accesslog.otlp.grpc.endpoint=otel-collector.otel.svc::4317"
+              - "--accesslog.otlp.grpc.endpoint=otel-collector.otel.svc:4317"
               # https://doc.traefik.io/traefik/master/reference/install-configuration/observability/metrics/
               - "--metrics.otlp=true"
               - "--metrics.otlp.grpc=true"
               - "--metrics.otlp.grpc.insecure=true"
-              - "--metrics.otlp.grpc.endpoint=otel-collector.otel.svc::4317"
+              - "--metrics.otlp.grpc.endpoint=otel-collector.otel.svc:4317"
               # https://doc.traefik.io/traefik/master/reference/install-configuration/observability/tracing/
               - "--tracing=true"
               - "--tracing.otlp.grpc=true"
               - "--tracing.otlp.grpc.insecure=true"
-              - "--tracing.otlp.grpc.endpoint=otel-collector.otel.svc::4317"
+              - "--tracing.otlp.grpc.endpoint=otel-collector.otel.svc:4317"
         api:
           persistence:
             size: 16Gi
