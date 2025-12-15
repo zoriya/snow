@@ -18,6 +18,6 @@ spec:
   source:
     repoURL: ghcr.io/grafana/helm-charts
     chart: grafana-operator
-    targetRevision: 5.21.0
+    targetRevision: 5.21.1
     helm:
       valuesObject: {}
