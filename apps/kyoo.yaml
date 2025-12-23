@@ -34,6 +34,8 @@ spec:
           enabled: true
         transcoder:
           runtimeClass: nvidia
+          persistence:
+            size: 10Gi
           kyoo_transcoder:
             extraEnv:
             - name: GOCODER_PREFIX

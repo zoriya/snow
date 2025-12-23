@@ -51,9 +51,11 @@ spec:
                   claims: '{"permissions": ["users.read", "users.write", "apikeys.read", "apikeys.write", "users.delete", "core.read", "core.write", "core.play", "scanner.trigger"], "verified": true}'
         api:
           persistence:
-            size: 16Gi
+            size: 32Gi
         transcoder:
           runtimeClass: nvidia
+          persistence:
+            size: 32Gi
         ingress:
           enabled: true
           host: beta.sdg.moe
