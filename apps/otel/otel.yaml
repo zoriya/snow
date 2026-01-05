@@ -25,17 +25,22 @@ spec:
 
   config:
     receivers:
-      # hostmetrics:
-      #   scrapers:
-      #     cpu:
-      #     disk:
-      #     filesystem:
-      #     load:
-      #     memory:
-      #     network:
-      #     process:
-      #     processes:
-      #     paging:
+      hostmetrics:
+        scrapers:
+          cpu:
+            metrics:
+              system.cpu.physical.count:
+                enabled: true
+              system.cpu.logical.count:
+                enabled: true
+          disk:
+          filesystem:
+          load:
+          memory:
+          network:
+          process:
+          processes:
+          paging:
       otlp:
         protocols:
           grpc:
@@ -102,9 +107,9 @@ spec:
           processors: [k8sattributes, memory_limiter, batch]
           exporters: [clickhouse]
         metrics:
-          receivers: [otlp] #[otlp, hostmetrics]
+          receivers: [otlp, hostmetrics]
           processors: [k8sattributes, memory_limiter, batch]
-          exporters: [debug, clickhouse]
+          exporters: [clickhouse]
         logs:
           receivers: [otlp]
           processors: [k8sattributes, memory_limiter, batch]
