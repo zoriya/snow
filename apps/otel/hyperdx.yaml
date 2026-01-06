@@ -1,7 +1,7 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: hypderx-config
+  name: hyperdx-config
 spec:
   refreshInterval: 24h
   secretStoreRef:
