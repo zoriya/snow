@@ -4,11 +4,6 @@ metadata:
   name: otel
 spec:
   mode: daemonset
-  presets:
-    kubeletMetrics:
-      enabled: true
-    hostMetrics:
-      enabled: true
   env:
     - name: CLICKHOUSE_PASSWORD
       valueFrom:
@@ -54,6 +49,15 @@ spec:
             endpoint: 0.0.0.0:4318
             auth:
               authenticator: basicauth
+      kubeletstats:
+        collection_interval: 10s
+        auth_type: "serviceAccount"
+        endpoint: "${env:K8S_NODE_NAME}:10250"
+        insecure_skip_verify: true
+        metric_groups:
+          - node
+          - pod
+          - container
 
     processors:
       memory_limiter:
@@ -112,7 +116,7 @@ spec:
           processors: [k8sattributes, memory_limiter, batch]
           exporters: [clickhouse]
         metrics:
-          receivers: [otlp, hostmetrics]
+          receivers: [otlp, hostmetrics, kubeletstats]
           processors: [k8sattributes, memory_limiter, batch]
           exporters: [clickhouse]
         logs:
