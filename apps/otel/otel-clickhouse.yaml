@@ -95,3 +95,5 @@ spec:
         - regexp:
             source: uuid
             target: grafana
+    - extract:
+        key: clickhouse-basicauth
