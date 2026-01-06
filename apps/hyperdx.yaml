@@ -27,6 +27,8 @@ spec:
           enabled: false
         otel:
           enabled: false
+        global:
+          storageClassName: openebs-zfs-tank
         hyperdx:
           otelExporterEndpoint: "http://otel-collector.otel.svc:4317"
 
