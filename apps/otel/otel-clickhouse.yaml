@@ -33,11 +33,11 @@ spec:
       grafana/grants/query:
         - GRANT SELECT ON otel.*
 
-      hypderx/password:
+      hyperdx/password:
         valueFrom:
           secretKeyRef:
             name: clickhouse-passwords
-            key: hypderx
+            key: hyperdx
       hyperdx/networks/ip: "::/0"
       hypderx/grants/query:
         - GRANT SELECT ON otel.*
