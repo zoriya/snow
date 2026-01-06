@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hyperdx
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: otel
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+  source:
+    repoURL: https://clickhouse.github.io/ClickStack-helm-charts
+    chart: clickstack
+    targetRevision: 1.1.0
+    helm:
+      values: |
+        # hyperdx only
+        # https://clickhouse.com/docs/use-cases/observability/clickstack/deployment/helm-deployment-options#minimal-deployment
+        clickhouse:
+          enabled: false
+        otel:
+          enabled: false
+        hyperdx:
+          otelExporterEndpoint: "http://otel-collector.otel.svc:4317"
+
+          defaultConnections: |
+            [
+              {
+                "name": "External ClickHouse",
+                "host": "http://your-clickhouse-server:8123",
+                "port": 8123,
+                "username": "your-username",
+                "password": "your-password"
+              }
+            ]
+
+          useExistingConfigSecret: true
+          existingConfigSecret: "hyperdx-config"
+          existingConfigConnectionsKey: "connections.json"
+          existingConfigSourcesKey: "sources.json"

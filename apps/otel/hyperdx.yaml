@@ -1,0 +1,30 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: hypderx-config
+spec:
+  refreshInterval: 24h
+  secretStoreRef:
+    name: bitwarden
+    kind: ClusterSecretStore
+  target:
+    template:
+      engineVersion: v2
+      data:
+        connections.json: |-
+          [
+            {
+              "name": "ClickHouse",
+              "host": "http://clickhouse-otel-cluster:8123",
+              "port": 8123,
+              "username": "hyperdx",
+              "password": "{{ .hyperdx }}"
+            }
+          ]
+        sources.json: |
+          {}
+  dataFrom:
+    - extract:
+        key: clickhouse-basicauth
+---
+
