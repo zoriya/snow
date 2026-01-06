@@ -32,6 +32,15 @@ spec:
       grafana/networks/ip: "::/0"
       grafana/grants/query:
         - GRANT SELECT ON otel.*
+
+      hypderx/password:
+        valueFrom:
+          secretKeyRef:
+            name: clickhouse-passwords
+            key: hypderx
+      hyperdx/networks/ip: "::/0"
+      hypderx/grants/query:
+        - GRANT SELECT ON otel.*
   defaults:
     templates:
       podTemplate: pod-template
