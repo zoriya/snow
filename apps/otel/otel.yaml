@@ -7,6 +7,8 @@ spec:
   presets:
     kubeletMetrics:
       enabled: true
+    hostMetrics:
+      enabled: true
   env:
     - name: CLICKHOUSE_PASSWORD
       valueFrom:
