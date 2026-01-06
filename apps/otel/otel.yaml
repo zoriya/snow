@@ -4,6 +4,9 @@ metadata:
   name: otel
 spec:
   mode: daemonset
+  presets:
+    kubeletMetrics:
+      enabled: true
   env:
     - name: CLICKHOUSE_PASSWORD
       valueFrom:
