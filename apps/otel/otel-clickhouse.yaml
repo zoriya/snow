@@ -76,6 +76,10 @@ metadata:
   name: clickhouse-passwords
 spec:
   refreshPolicy: CreatedOnce
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: bitwarden
+
   dataFrom:
     - sourceRef:
         generatorRef:
