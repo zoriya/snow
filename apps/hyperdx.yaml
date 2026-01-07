@@ -29,6 +29,22 @@ spec:
           enabled: false
         global:
           storageClassName: openebs-zfs-tank
+        ingress:
+          enabled: true
+          ingressClassName: cilium
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt
+            acme.cert-manager.io/http01-edit-in-place: "true"
+          host: hyperdx.sdg.moe
+          path: "/(.*)"
+          pathType: "ImplementationSpecific"
+          proxyBodySize: "100m"
+          proxyConnectTimeout: "60"
+          proxySendTimeout: "60"
+          proxyReadTimeout: "60"
+          tls:
+            enabled: true
+            secretName: "hyperdx-ssl"
         hyperdx:
           otelExporterEndpoint: "http://otel-collector.otel.svc:4317"
 
