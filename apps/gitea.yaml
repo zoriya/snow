@@ -59,6 +59,13 @@ spec:
           - hosts:
               - gitea.sdg.moe
             secretName: gitea-ssl
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 512Mi
         valkey-cluster:
           enabled: false
         postgresql-ha:
