@@ -27,15 +27,15 @@ spec:
     receivers:
       hostmetrics:
         scrapers:
-          cpu:
-          disk:
-          filesystem:
-          load:
-          memory:
-          network:
-          process:
-          processes:
-          paging:
+          cpu: {}
+          disk: {}
+          filesystem: {}
+          load: {}
+          memory: {}
+          network: {}
+          process: {}
+          processes: {}
+          paging: {}
       otlp:
         protocols:
           grpc:
