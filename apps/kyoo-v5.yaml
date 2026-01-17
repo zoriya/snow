@@ -43,6 +43,7 @@ spec:
           address: https://beta.sdg.moe
           transcoderAcceleration: nvidia
           auth:
+            guestClaims: '{"permissions": ["users.read", "apikeys.read", "core.read", "core.play"], "verified": true}'
             apikeys:
               extra:
                 - name: admin
