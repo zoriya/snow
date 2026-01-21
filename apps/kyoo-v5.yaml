@@ -50,6 +50,40 @@ spec:
                   existingSecret: admin-apikey
                   apikeyKey: uuid
                   claims: '{"permissions": ["users.read", "users.write", "apikeys.read", "apikeys.write", "users.delete", "core.read", "core.write", "core.play", "scanner.trigger"], "verified": true}'
+        traefikproxy:
+          traefik:
+            image:
+              tag: "v3.6.4" # will eventually add this to renovate or swap to subchart
+            extraArgs:
+              - "--entryPoints.web.address=:80/tcp"
+              - "--entryPoints.websecure.address=:443/tcp"
+              - "--entryPoints.web.forwardedHeaders.insecure=true"
+              - "--entryPoints.websecure.forwardedHeaders.insecure=true"
+              - "--api.dashboard=true"
+              - "--api.insecure=true"
+              - "--providers.file.filename=/dynamic_config/dynamic_config.yaml"
+              # https://doc.traefik.io/traefik/master/reference/install-configuration/observability/logs-and-accesslogs/
+              - "--experimental.otlpLogs=true"
+              - "--log.level=INFO"
+              - "--log.format=json"
+              - "--log.otlp.grpc=true"
+              - "--log.otlp.grpc.insecure=true"
+              - "--log.otlp.grpc.endpoint=otel-collector.otel.svc:4317"
+              - "--accesslog=true"
+              - "--accesslog.format=json"
+              - "--accesslog.otlp.grpc=true"
+              - "--accesslog.otlp.grpc.insecure=true"
+              - "--accesslog.otlp.grpc.endpoint=otel-collector.otel.svc:4317"
+              # https://doc.traefik.io/traefik/master/reference/install-configuration/observability/metrics/
+              - "--metrics.otlp=true"
+              - "--metrics.otlp.grpc=true"
+              - "--metrics.otlp.grpc.insecure=true"
+              - "--metrics.otlp.grpc.endpoint=otel-collector.otel.svc:4317"
+              # https://doc.traefik.io/traefik/master/reference/install-configuration/observability/tracing/
+              - "--tracing=true"
+              - "--tracing.otlp.grpc=true"
+              - "--tracing.otlp.grpc.insecure=true"
+              - "--tracing.otlp.grpc.endpoint=otel-collector.otel.svc:4317"
         api:
           persistence:
             size: 32Gi
