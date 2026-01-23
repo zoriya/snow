@@ -17,7 +17,7 @@ spec:
   source:
     repoURL: ghcr.io/telepresenceio
     chart: telepresence-oss
-    targetRevision: 2.25.2
+    targetRevision: 2.26.0
     helm:
       releaseName: traffic-manager
       valuesObject: {}
