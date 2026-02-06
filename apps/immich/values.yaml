@@ -39,7 +39,7 @@ controllers:
       main:
         image:
           # renovate: datasource=github-releases depName=immich-app/immich
-          tag: "v2.5.3"
+          tag: "v2.5.5"
         env:
           DB_URL: postgres://immich@postgres-cluster-rw.postgres/immich?sslcert=/pg/tls.crt&sslkey=/pg/tls.key&sslrootcert=/pg/ca.crt
           IMMICH_CONFIG_FILE: /config/config.yaml
