@@ -18,7 +18,7 @@ spec:
   source:
     repoURL: https://clickhouse.github.io/ClickStack-helm-charts
     chart: clickstack
-    targetRevision: 1.1.1
+    targetRevision: 1.1.2
     helm:
       values: |
         # hyperdx only
