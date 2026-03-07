@@ -15,7 +15,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: transmission
-          image: ghcr.io/home-operations/transmission:4.1.0
+          image: ghcr.io/home-operations/transmission:4.1.1
           env:
             - name: TRANSMISSION__UMASK
               value: "002"
