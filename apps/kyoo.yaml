@@ -32,14 +32,6 @@ spec:
           enabled: true
         postgresql:
           enabled: true
-        transcoder:
-          runtimeClass: nvidia
-          persistence:
-            size: 10Gi
-          kyoo_transcoder:
-            extraEnv:
-            - name: GOCODER_PREFIX
-              value: /video
         kyoo:
           address: https://kyoo.sdg.moe
           transcoderAcceleration: nvidia
@@ -54,9 +46,27 @@ spec:
               authorizationAddress: https://authentik.sdg.moe/application/o/authorize/
               tokenAddress: https://authentik.sdg.moe/application/o/token/
               profileAddress: https://authentik.sdg.moe/application/o/userinfo/
+        autosync:
+          replicaCount: 0
         back:
+          replicaCount: 0
           persistence:
             size: 20Gi
+        front:
+          replicaCount: 0
+        matcher:
+          replicaCount: 0
+        scanner:
+          replicaCount: 0
+        transcoder:
+          replicaCount: 0
+          runtimeClass: nvidia
+          persistence:
+            size: 10Gi
+          kyoo_transcoder:
+            extraEnv:
+            - name: GOCODER_PREFIX
+              value: /video
         ingress:
           enabled: true
           ingressClassName: cilium
