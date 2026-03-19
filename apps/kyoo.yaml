@@ -13,136 +13,185 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
   source:
-    # repoURL: ghcr.io/zoriya/helm-charts
-    # chart: kyoo
-    # targetRevision: 4.7.1
-    repoURL: https://github.com/zoriya/kyoo
+    repoURL: https://github.com/zoriya/Kyoo
     path: chart
-    targetRevision: feat/runtime-class
+    targetRevision: feat/volumes
     helm:
       valuesObject:
         global:
           image:
-            tag: 4.7.1
-        meilisearch:
-          enabled: true
-        rabbitmq:
-          enabled: true
-        postgresql:
-          enabled: true
+            tag: edge
+            imagePullPolicy: Always
+          postgres:
+            shared:
+              host: postgres-cluster-rw.postgres
+              userOverride: kyoo
+              databaseOverride: kyoo
+              sslmodeOverride: verify-full
+          extraEnv:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://otel-collector.otel.svc:4317"
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "grpc"
+            - name: PGSSLCERT
+              value: /var/postgres-ssl/tls.crt
+            - name: PGSSLKEY
+              value: /var/postgres-ssl/tls.key
+            - name: PGSSLROOTCERT
+              value: /var/postgres-ssl/ca.crt
+          extraVolumes:
+            - name: postgres-cert
+              secret:
+                secretName: postgres-kyoo
+                defaultMode: 0640
+            - name: media
+              persistentVolumeClaim:
+                claimName: media
+          extraVolumeMounts:
+            - name: postgres-cert
+              mountPath: /var/postgres-ssl
         kyoo:
           address: https://kyoo.sdg.moe
           transcoderAcceleration: nvidia
-          oidc_providers:
-            - name: Authentik
-              logo: https://avatars.githubusercontent.com/u/82976448?s=48&v=4
-              existingSecret: sso
-              clientIdKey: clientId
-              clientSecretKey: clientSecret
-              scope: "email openid profile"
-              authMethod: ClientSecretBasic
-              authorizationAddress: https://authentik.sdg.moe/application/o/authorize/
-              tokenAddress: https://authentik.sdg.moe/application/o/token/
-              profileAddress: https://authentik.sdg.moe/application/o/userinfo/
-        autosync:
-          replicaCount: 0
-        back:
-          replicaCount: 0
+          auth:
+            guestClaims: '{"permissions": ["users.read", "apikeys.read", "core.read", "core.play"], "verified": true}'
+            apikeys:
+              extra:
+                - name: admin
+                  existingSecret: admin-apikey
+                  apikeyKey: uuid
+                  claims: '{"permissions": ["users.read", "users.write", "apikeys.read", "apikeys.write", "users.delete", "core.read", "core.write", "core.play", "scanner.trigger"], "verified": true}'
+            # oidc_providers:
+            #   - name: Authentik
+            #     logo: https://avatars.githubusercontent.com/u/82976448?s=48&v=4
+            #     existingSecret: sso
+            #     clientIdKey: clientId
+            #     clientSecretKey: clientSecret
+            #     scope: "email openid profile"
+            #     authMethod: ClientSecretBasic
+            #     authorizationAddress: https://authentik.sdg.moe/application/o/authorize/
+            #     tokenAddress: https://authentik.sdg.moe/application/o/token/
+            #     profileAddress: https://authentik.sdg.moe/application/o/userinfo/
+        api:
           persistence:
-            size: 20Gi
-        front:
-          replicaCount: 0
-        matcher:
-          replicaCount: 0
-        scanner:
-          replicaCount: 0
+            size: 32Gi
         transcoder:
-          replicaCount: 0
           runtimeClass: nvidia
           persistence:
-            size: 10Gi
-          kyoo_transcoder:
-            extraEnv:
-            - name: GOCODER_PREFIX
-              value: /video
+            size: 32Gi
+        auth:
+          securityContext:
+            fsGroup: 10001
+          kyoo_auth:
+            containerSecurityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              readOnlyRootFilesystem: true
+              runAsGroup: 10001
+              runAsNonRoot: true
+              runAsUser: 10001
         ingress:
           enabled: true
+          host: kyoo.sdg.moe
           ingressClassName: cilium
           annotations:
             cert-manager.io/cluster-issuer: letsencrypt
             acme.cert-manager.io/http01-edit-in-place: "true"
-          host: kyoo.sdg.moe
           tls: true
           tlsSecret: kyoo-tls
-        media:
-          baseMountPath: /medias
-          volumeMounts:
-          - name: medias
-            mountPath: /medias
-            readOnly: true
-          volumes:
-          - name: medias
-            persistentVolumeClaim:
-              claimName: medias
         extraObjects:
-        - apiVersion: v1
-          kind: Secret
-          metadata:
-            name: bigsecret
-          type: Opaque
-          stringData:
-            # yes those aren't really secrets, i'll change it for v5 soonish
-            kyoo_apikeys: yHXWGsjfjE6sy6UxavqmTUYxgCFYek
-            tmdb_apikey: ""
-            tvdb_apikey: ""
-            tvdb_pin: ""
-            MEILI_MASTER_KEY: barkLike8SuperDucks
-            postgres_user: kyoo_all
-            postgres_password: watchSomething4me
-            rabbitmq_user: kyoo_all
-            rabbitmq_password: youAreAmazing2
-            rabbitmq_cookie: mmmGoodCookie
+          - apiVersion: v1
+            kind: Secret
+            metadata:
+              name: bigsecret
+            type: Opaque
+            stringData:
+              postgres_user: kyoo_all
+              postgres_password: watchSomething4me
+              scanner_apikey: scanner-triquarter4u
 
-        - apiVersion: v1
-          kind: PersistentVolume
-          metadata:
-            name: kyoo-medias
-          spec:
-            accessModes:
-            - ReadWriteOnce
-            capacity:
-              storage: 200Ti
-            csi:
-              driver: zfs.csi.openebs.io
-              fsType: zfs
-              volumeAttributes:
-                openebs.io/poolname: ocean
-              volumeHandle: "medias"
-            persistentVolumeReclaimPolicy: Retain
-        - apiVersion: v1
-          kind: PersistentVolumeClaim
-          metadata:
-            name: medias
-          spec:
-            storageClassName: ""
-            volumeName: kyoo-medias
-            accessModes:
-            - ReadWriteOnce
-            resources:
-              requests:
+          - apiVersion: postgresql.cnpg.io/v1
+            kind: Database
+            metadata:
+              name: kyoo-db
+              namespace: postgres
+            spec:
+              name: kyoo
+              owner: kyoo
+              cluster:
+                name: postgres-cluster
+              databaseReclaimPolicy: delete
+
+          - apiVersion: cert-manager.io/v1
+            kind: Certificate
+            metadata:
+              name: postgres-kyoo
+            spec:
+              secretName: postgres-kyoo
+              usages:
+                - client auth
+              # same as pg user
+              commonName: kyoo
+              issuerRef:
+                name: postgres-ca
+                kind: ClusterIssuer
+                group: cert-manager.io
+
+          - apiVersion: v1
+            kind: PersistentVolume
+            metadata:
+              name: kyoo-medias
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              capacity:
                 storage: 200Ti
+              csi:
+                driver: zfs.csi.openebs.io
+                fsType: zfs
+                volumeAttributes:
+                  openebs.io/poolname: ocean
+                volumeHandle: "medias"
+              persistentVolumeReclaimPolicy: Retain
+          - apiVersion: v1
+            kind: PersistentVolumeClaim
+            metadata:
+              name: media
+            spec:
+              storageClassName: ""
+              volumeName: kyoo-medias
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 200Ti
 
-        - apiVersion: external-secrets.io/v1
-          kind: ExternalSecret
-          metadata:
-            name: sso
-          spec:
-            refreshInterval: 24h
-            secretStoreRef:
-              kind: ClusterSecretStore
-              name: bitwarden
-            dataFrom:
-              - extract:
-                  key: kyoo-sso
+          - apiVersion: external-secrets.io/v1
+            kind: ExternalSecret
+            metadata:
+              name: admin-apikey
+            spec:
+              refreshPolicy: CreatedOnce
+              dataFrom:
+                - sourceRef:
+                    generatorRef:
+                      apiVersion: generators.external-secrets.io/v1alpha1
+                      kind: ClusterGenerator
+                      name: uuid
+
+          - apiVersion: external-secrets.io/v1
+            kind: ExternalSecret
+            metadata:
+              name: sso
+            spec:
+              refreshInterval: 24h
+              secretStoreRef:
+                kind: ClusterSecretStore
+                name: bitwarden
+              dataFrom:
+                - extract:
+                    key: kyoo-sso
