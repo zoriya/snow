@@ -17,7 +17,7 @@ spec:
   source:
     repoURL: https://github.com/zoriya/Kyoo
     path: chart
-    targetRevision: feat/volumes
+    targetRevision: master
     helm:
       valuesObject:
         global:
