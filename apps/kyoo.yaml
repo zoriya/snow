@@ -63,17 +63,17 @@ spec:
                   existingSecret: admin-apikey
                   apikeyKey: uuid
                   claims: '{"permissions": ["users.read", "users.write", "apikeys.read", "apikeys.write", "users.delete", "core.read", "core.write", "core.play", "scanner.trigger"], "verified": true}'
-            # oidc_providers:
-            #   - name: Authentik
-            #     logo: https://avatars.githubusercontent.com/u/82976448?s=48&v=4
-            #     existingSecret: sso
-            #     clientIdKey: clientId
-            #     clientSecretKey: clientSecret
-            #     scope: "email openid profile"
-            #     authMethod: ClientSecretBasic
-            #     authorizationAddress: https://authentik.sdg.moe/application/o/authorize/
-            #     tokenAddress: https://authentik.sdg.moe/application/o/token/
-            #     profileAddress: https://authentik.sdg.moe/application/o/userinfo/
+          oidc_providers:
+            - name: Authentik
+              logo: https://avatars.githubusercontent.com/u/82976448?s=48&v=4
+              existingSecret: sso
+              clientIdKey: clientId
+              clientSecretKey: clientSecret
+              scope: "email openid profile"
+              authMethod: ClientSecretBasic
+              authorizationAddress: https://authentik.sdg.moe/application/o/authorize/
+              tokenAddress: https://authentik.sdg.moe/application/o/token/
+              profileAddress: https://authentik.sdg.moe/application/o/userinfo/
         api:
           persistence:
             size: 32Gi
