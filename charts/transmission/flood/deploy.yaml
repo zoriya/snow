@@ -15,7 +15,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
       - name: flood
-        image: jesec/flood:4.13.7
+        image: jesec/flood:4.13.9
         env:
         - name: HOME
           value: /config
