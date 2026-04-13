@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: atuin
-        image: ghcr.io/atuinsh/atuin:18.13.6
+        image: ghcr.io/atuinsh/atuin:18.14.0
         args: [start]
         ports:
         - name: http
