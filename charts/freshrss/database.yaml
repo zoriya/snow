@@ -1,0 +1,37 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: freshrss-db
+  namespace: postgres
+spec:
+  name: freshrss
+  owner: freshrss
+  cluster:
+    name: postgres-cluster
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: postgres-freshrss
+spec:
+  secretName: postgres-freshrss
+  usages:
+  - client auth
+  commonName: freshrss
+  issuerRef:
+    name: postgres-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freshrss-config
+data:
+  config.custom.php: |
+    <?php
+    return [
+      'db' => [
+        'connection_uri_params' => 'sslmode=verify-full;sslcert=/pg/tls.crt;sslkey=/pg/tls.key;sslrootcert=/pg/ca.crt',
+      ],
+    ];

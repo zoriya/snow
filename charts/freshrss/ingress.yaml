@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: freshrss
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    acme.cert-manager.io/http01-edit-in-place: "true"
+spec:
+  ingressClassName: cilium
+  rules:
+  - host: freshrss.sdg.moe
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: freshrss
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - freshrss.sdg.moe
+    secretName: freshrss-tls

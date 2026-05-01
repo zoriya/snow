@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freshrss
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: freshrss
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: freshrss
+    spec:
+      containers:
+      - name: freshrss
+        image: docker.io/freshrss/freshrss:1.28.1
+        env:
+        - name: TZ
+          value: UTC
+        - name: CRON_MIN
+          value: "1,31"
+        - name: BASE_URL
+          value: https://freshrss.sdg.moe
+        - name: LISTEN
+          value: "8080"
+        - name: PGSSLMODE
+          value: verify-full
+        - name: PGSSLCERT
+          value: /pg/tls.crt
+        - name: PGSSLKEY
+          value: /pg/tls.key
+        - name: PGSSLROOTCERT
+          value: /pg/ca.crt
+        - name: FRESHRSS_INSTALL
+          value: --api-enabled --auth-type http_auth --db-base freshrss --db-host postgres-cluster-rw.postgres --db-type pgsql --db-user freshrss --default-user admin --language en
+        - name: OIDC_ENABLED
+          value: "1"
+        - name: OIDC_PROVIDER_METADATA_URL
+          value: https://authentik.sdg.moe/application/o/freshrss/.well-known/openid-configuration
+        - name: OIDC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: freshrss-oidc
+              key: clientId
+        - name: OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: freshrss-oidc
+              key: clientSecret
+        - name: OIDC_CLIENT_CRYPTO_KEY
+          valueFrom:
+            secretKeyRef:
+              name: freshrss-oidc-crypto
+              key: key
+        - name: OIDC_SCOPES
+          value: openid profile email
+        - name: OIDC_REMOTE_USER_CLAIM
+          value: preferred_username
+        - name: OIDC_X_FORWARDED_HEADERS
+          value: X-Forwarded-Host X-Forwarded-Port X-Forwarded-Proto
+        ports:
+        - name: http
+          containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        volumeMounts:
+        - name: freshrss-data
+          mountPath: /var/www/FreshRSS/data
+        - name: freshrss-extensions
+          mountPath: /var/www/FreshRSS/extensions
+        - name: postgres-cert
+          mountPath: /pg
+        - name: freshrss-config
+          mountPath: /var/www/FreshRSS/data/config.custom.php
+          subPath: config.custom.php
+      volumes:
+      - name: freshrss-data
+        persistentVolumeClaim:
+          claimName: freshrss-data
+      - name: freshrss-extensions
+        persistentVolumeClaim:
+          claimName: freshrss-extensions
+      - name: postgres-cert
+        secret:
+          secretName: postgres-freshrss
+          defaultMode: 0640
+      - name: freshrss-config
+        configMap:
+          name: freshrss-config
+      securityContext:
+        fsGroup: 33

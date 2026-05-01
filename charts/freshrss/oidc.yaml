@@ -1,0 +1,30 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: freshrss-oidc
+spec:
+  refreshInterval: 24h
+  secretStoreRef:
+    name: bitwarden
+    kind: ClusterSecretStore
+  dataFrom:
+  - extract:
+      key: freshrss-sso
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: freshrss-oidc-crypto
+spec:
+  refreshPolicy: CreatedOnce
+  target:
+    template:
+      engineVersion: v2
+      data:
+        key: "{{ .password }}"
+  dataFrom:
+  - sourceRef:
+      generatorRef:
+        apiVersion: generators.external-secrets.io/v1alpha1
+        kind: ClusterGenerator
+        name: password

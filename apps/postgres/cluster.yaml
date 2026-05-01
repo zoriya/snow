@@ -46,3 +46,6 @@ spec:
     - name: kyoo
       login: true
       disablePastword: true
+    - name: freshrss
+      login: true
+      disablePassword: true
