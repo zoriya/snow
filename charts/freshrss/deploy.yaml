@@ -32,7 +32,7 @@ spec:
         - name: PGSSLROOTCERT
           value: /pg/ca.crt
         - name: FRESHRSS_INSTALL
-          value: --api-enabled --auth-type http_auth --db-base freshrss --db-host postgres-cluster-rw.postgres --db-type pgsql --db-user freshrss --default-user admin --language en
+          value: --api-enabled --auth-type http_auth --db-base freshrss --db-host postgres-cluster-rw.postgres --db-type pgsql --db-user freshrss --language en
         - name: OIDC_ENABLED
           value: "1"
         - name: OIDC_PROVIDER_METADATA_URL
@@ -61,14 +61,6 @@ spec:
         ports:
         - name: http
           containerPort: 8080
-        livenessProbe:
-          httpGet:
-            path: /
-            port: http
-        readinessProbe:
-          httpGet:
-            path: /
-            port: http
         volumeMounts:
         - name: freshrss-data
           mountPath: /var/www/FreshRSS/data
