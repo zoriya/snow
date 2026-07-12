@@ -32,6 +32,8 @@ machine-learning:
   persistence:
     cache:
       type: persistentVolumeClaim
+      size: 10Gi
+      accessMode: ReadWriteMany
 
 controllers:
   main:
