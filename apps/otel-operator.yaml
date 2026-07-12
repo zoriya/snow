@@ -20,9 +20,6 @@ spec:
     targetRevision: 0.119.0
     helm:
       valuesObject:
-        # optional and not used anymore
-        kubeRBACProxy:
-            enabled: false
         manager:
           collectorImage:
             repository: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib
