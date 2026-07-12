@@ -3,12 +3,12 @@
 ```bash
 talhelper genconfig
 talhelper gencommand apply --extra-flags --insecure | sh
-talosctl bootstrap -n 192.168.0.200 -e 192.168.0.200
+talosctl bootstrap -n 192.168.1.200 -e 192.168.1.200
 talosctl kubeconfig
 
 helm repo add cilium https://helm.cilium.io/
 helm upgrade -i cilium cilium/cilium \
-    --version 1.17.5 \
+    --version 1.19.5 \
     --namespace kube-system \
     --values ./cilium-values.yaml
 
