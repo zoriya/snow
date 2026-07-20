@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sish
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: "*.tun.sdg.moe"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sish-http
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - "*.tun.sdg.moe"
+      secretName: sish-tls

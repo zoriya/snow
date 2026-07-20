@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+labels:
+  - includeSelectors: true
+    pairs:
+      apps.kubernetes.io/name: sish
+
+resources:
+  - ./deploy.yaml
+  - ./svc.yaml
+  - ./ingress.yaml
+  - ./certificate.yaml
+  - ./pubkeys.yaml
+  - ./pvc.yaml

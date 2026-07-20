@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sish
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      containers:
+        - name: sish
+          image: antoniomika/sish:v2.23.0
+          args:
+            - --ssh-address=:22
+            - --http-address=:80
+            - --domain=tun.sdg.moe
+            - --authentication=true
+            - --authentication-keys-directory=/pubkeys
+            - --private-keys-directory=/keys
+            - --bind-random-subdomains=false
+            - --bind-random-ports=false
+          ports:
+            - name: ssh
+              containerPort: 22
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - name: keys
+              mountPath: /keys
+            - name: pubkeys
+              mountPath: /pubkeys
+      volumes:
+        - name: keys
+          persistentVolumeClaim:
+            claimName: sish-keys
+        - name: pubkeys
+          configMap:
+            name: sish-pubkeys

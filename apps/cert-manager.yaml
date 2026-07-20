@@ -22,26 +22,61 @@ spec:
       valuesObject:
         crds:
           enabled: true
----
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt
-spec:
-  acme:
-    email: zoe.roux@zoriya.dev
-    profile: tlsserver
-    server: https://acme-v02.api.letsencrypt.org/directory
-    privateKeySecretRef:
-      name: lets-encrypt-pk
-    solvers:
-    - http01:
-        ingress:
-          ingressClassName: cilium
----
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: selfsigned
-spec:
-  selfSigned: {}
+        extraObjects:
+          - apiVersion: cert-manager.io/v1
+            kind: ClusterIssuer
+            metadata:
+              name: letsencrypt
+            spec:
+              acme:
+                email: zoe.roux@zoriya.dev
+                profile: tlsserver
+                server: https://acme-v02.api.letsencrypt.org/directory
+                privateKeySecretRef:
+                  name: lets-encrypt-pk
+                solvers:
+                  - http01:
+                      ingress:
+                        ingressClassName: cilium
+          - apiVersion: cert-manager.io/v1
+            kind: ClusterIssuer
+            metadata:
+              name: selfsigned
+            spec:
+              selfSigned: {}
+          - apiVersion: cert-manager.io/v1
+            kind: ClusterIssuer
+            metadata:
+              name: letsencrypt-dns
+            spec:
+              acme:
+                email: zoe.roux@zoriya.dev
+                profile: tlsserver
+                server: https://acme-v02.api.letsencrypt.org/directory
+                privateKeySecretRef:
+                  name: lets-encrypt-dns-pk
+                solvers:
+                  - selector:
+                      dnsZones:
+                        - sdg.moe
+                    dns01:
+                      cloudflare:
+                        apiTokenSecretRef:
+                          name: cloudflare-api-token
+                          key: api-token
+          - apiVersion: external-secrets.io/v1
+            kind: ExternalSecret
+            metadata:
+              name: cloudflare-api-token
+              namespace: cert-manager
+            spec:
+              refreshInterval: 24h
+              secretStoreRef:
+                name: bitwarden
+                kind: ClusterSecretStore
+              target:
+                name: cloudflare-api-token
+              data:
+                - secretKey: api-token
+                  remoteRef:
+                    key: cloudflare-api-token
