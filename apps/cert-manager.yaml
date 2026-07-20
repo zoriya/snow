@@ -23,7 +23,8 @@ spec:
         crds:
           enabled: true
         extraObjects:
-          - apiVersion: cert-manager.io/v1
+          - |
+            apiVersion: cert-manager.io/v1
             kind: ClusterIssuer
             metadata:
               name: letsencrypt
@@ -38,13 +39,15 @@ spec:
                   - http01:
                       ingress:
                         ingressClassName: cilium
-          - apiVersion: cert-manager.io/v1
+          - |
+            apiVersion: cert-manager.io/v1
             kind: ClusterIssuer
             metadata:
               name: selfsigned
             spec:
               selfSigned: {}
-          - apiVersion: cert-manager.io/v1
+          - |
+            apiVersion: cert-manager.io/v1
             kind: ClusterIssuer
             metadata:
               name: letsencrypt-dns
@@ -64,7 +67,8 @@ spec:
                         apiTokenSecretRef:
                           name: cloudflare-api-token
                           key: api-token
-          - apiVersion: external-secrets.io/v1
+          - |
+            apiVersion: external-secrets.io/v1
             kind: ExternalSecret
             metadata:
               name: cloudflare-api-token
