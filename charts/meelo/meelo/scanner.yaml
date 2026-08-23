@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scanner
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: scanner
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: scanner
+    spec:
+      containers:
+      - name: scanner
+        image: arthichaud/meelo-scanner:v3.12.0
+        ports:
+        - name: http
+          containerPort: 8133
+        env:
+        - name: API_URL
+          value: http://server:4000
+        - name: API_KEYS
+          valueFrom:
+            secretKeyRef:
+              name: api-key
+              key: uuid
+        - name: INTERNAL_CONFIG_DIR
+          value: /config
+        - name: INTERNAL_DATA_DIR
+          value: /data
+        volumeMounts:
+        - name: settings
+          mountPath: /config
+          readOnly: true
+        - name: musics
+          mountPath: /data
+          readOnly: true
+      volumes:
+      - name: settings
+        configMap:
+          name: settings
+      - name: musics
+        persistentVolumeClaim:
+          claimName: musics
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scanner
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/component: scanner
+  ports:
+  - name: http
+    port: 8133
+    targetPort: http

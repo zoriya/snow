@@ -45,7 +45,10 @@ spec:
       disablePassword: true
     - name: kyoo
       login: true
-      disablePastword: true
+      disablePassword: true
     - name: freshrss
+      login: true
+      disablePassword: true
+    - name: meelo
       login: true
       disablePassword: true

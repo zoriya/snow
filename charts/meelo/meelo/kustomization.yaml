@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+  - name: settings
+    files:
+    - ./settings.json
+  - name: nginx
+    files:
+    - ./nginx.conf
+
+resources:
+- ./database.yaml
+- ./secrets.yaml
+- ./server.yaml
+- ./scanner.yaml
+- ./matcher.yaml
+- ./front.yaml
+- ./meilisearch.yaml
+- ./rabbitmq.yaml
+- ./transcoder.yaml
+- ./nginx.yaml
+- ./ingress.yaml

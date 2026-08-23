@@ -7,6 +7,6 @@ labels:
     app.kubernetes.io/name: meelo
 
 resources:
-# - ./meelo
+- ./meelo
 - ./ytdlp
 - ./pv.yaml

@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: transcoder-metadata
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 32Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transcoder
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: transcoder
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: transcoder
+    spec:
+      containers:
+      - name: transcoder
+        # same tag as kyoo's transcoder, the image is 3G so let's not keep two of them around
+        image: ghcr.io/zoriya/kyoo_transcoder:edge
+        ports:
+        - name: http
+          containerPort: 7666
+        env:
+        - name: GOCODER_SAFE_PATH
+          value: /data
+        - name: GOCODER_CACHE_ROOT
+          value: /cache
+        - name: GOCODER_METADATA_ROOT
+          value: /metadata
+        - name: PGHOST
+          value: postgres-cluster-rw.postgres
+        - name: PGPORT
+          value: "5432"
+        - name: PGUSER
+          value: meelo
+        - name: PGDATABASE
+          value: meelo
+        - name: PGSSLMODE
+          value: verify-full
+        - name: PGSSLCERT
+          value: /pg/tls.crt
+        - name: PGSSLKEY
+          value: /pg/tls.key
+        - name: PGSSLROOTCERT
+          value: /pg/ca.crt
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://otel-collector.otel.svc:4317
+        - name: OTEL_EXPORTER_OTLP_PROTOCOL
+          value: grpc
+        volumeMounts:
+        - name: musics
+          mountPath: /data
+          readOnly: true
+        - name: metadata
+          mountPath: /metadata
+        - name: cache
+          mountPath: /cache
+        - name: postgres-cert
+          mountPath: /pg
+      volumes:
+      - name: musics
+        persistentVolumeClaim:
+          claimName: musics
+      - name: metadata
+        persistentVolumeClaim:
+          claimName: transcoder-metadata
+      - name: cache
+        emptyDir:
+          sizeLimit: 16Gi
+      - name: postgres-cert
+        secret:
+          secretName: postgres-meelo
+          defaultMode: 0640
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transcoder
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/component: transcoder
+  ports:
+  - name: http
+    port: 7666
+    targetPort: http
