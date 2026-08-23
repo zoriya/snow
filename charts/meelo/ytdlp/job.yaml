@@ -41,6 +41,7 @@ spec:
                   readOnly: true
                 - name: cookies
                   mountPath: /app/secrets
+                  readOnly: true
                 - name: work
                   mountPath: /work
                 - name: musics
