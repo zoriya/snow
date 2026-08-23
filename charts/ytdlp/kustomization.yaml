@@ -4,7 +4,7 @@ kind: Kustomization
 labels:
 - includeSelectors: true
   pairs:
-    app.kubernetes.io/component: ytdlp
+    app.kubernetes.io/name: ytdlp
 
 configMapGenerator:
   - name: sync-scripts
@@ -14,4 +14,5 @@ configMapGenerator:
 resources:
 - ./job.yaml
 - ./pvc.yaml
+- ./pv.yaml
 - ./secret.yaml

@@ -8,5 +8,4 @@ labels:
 
 resources:
 - ./meelo
-- ./ytdlp
 - ./pv.yaml

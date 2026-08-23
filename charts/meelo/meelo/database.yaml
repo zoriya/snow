@@ -20,6 +20,11 @@ spec:
   - client auth
   # same as pg user
   commonName: meelo
+  keystores:
+    pkcs12:
+      create: true
+      password: meelo
+      profile: Modern2023
   issuerRef:
     name: postgres-ca
     kind: ClusterIssuer

@@ -27,12 +27,17 @@ spec:
       containers:
       - name: server
         image: arthichaud/meelo-server:v3.12.0
+        command: [/bin/sh, -c]
+        args:
+        - yarn run prisma migrate deploy && yarn run start:prod
         ports:
         - name: http
           containerPort: 4000
         env:
+        # sslcert/sslkey/sslrootcert are for the runtime (@prisma/adapter-pg, ie node-postgres),
+        # sslidentity/sslpassword are for the prisma cli running the migrations.
         - name: DATABASE_URL
-          value: postgresql://meelo@postgres-cluster-rw.postgres:5432/meelo?schema=public&sslmode=verify-full&sslcert=/pg/tls.crt&sslkey=/pg/tls.key&sslrootcert=/pg/ca.crt
+          value: postgresql://meelo@postgres-cluster-rw.postgres:5432/meelo?schema=public&sslmode=verify-full&sslcert=/pg/tls.crt&sslkey=/pg/tls.key&sslrootcert=/pg/ca.crt&sslidentity=/pg/keystore.p12&sslpassword=meelo
         - name: MEILI_HOST
           value: http://meilisearch:7700
         - name: MEILI_MASTER_KEY
