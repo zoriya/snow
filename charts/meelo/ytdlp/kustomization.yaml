@@ -13,4 +13,5 @@ configMapGenerator:
 
 resources:
 - ./job.yaml
+- ./pvc.yaml
 - ./secret.yaml

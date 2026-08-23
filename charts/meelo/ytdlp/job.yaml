@@ -17,7 +17,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: ytdlp
-              image: nixery.dev/shell/yt-dlp
+              image: jauderho/yt-dlp:2026.08.19
               workingDir: /work
               command: [/app/ytdlp-sync.sh]
               env:
@@ -42,6 +42,8 @@ spec:
                 - name: cookies
                   mountPath: /app/secrets
                   readOnly: true
+                - name: state
+                  mountPath: /state
                 - name: work
                   mountPath: /work
                 - name: musics
@@ -56,6 +58,9 @@ spec:
                 claimName: musics
             - name: work
               emptyDir: {}
+            - name: state
+              persistentVolumeClaim:
+                claimName: ytdlp-state
             - name: cookies
               secret:
                 secretName: ytdlp
