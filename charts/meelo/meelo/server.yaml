@@ -87,8 +87,8 @@ spec:
         persistentVolumeClaim:
           claimName: config
       - name: settings
-        configMap:
-          name: settings
+        secret:
+          secretName: settings
       - name: musics
         persistentVolumeClaim:
           claimName: musics

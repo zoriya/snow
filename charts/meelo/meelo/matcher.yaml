@@ -40,8 +40,8 @@ spec:
           readOnly: true
       volumes:
       - name: settings
-        configMap:
-          name: settings
+        secret:
+          secretName: settings
 ---
 apiVersion: v1
 kind: Service

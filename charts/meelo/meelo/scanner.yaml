@@ -40,8 +40,8 @@ spec:
           readOnly: true
       volumes:
       - name: settings
-        configMap:
-          name: settings
+        secret:
+          secretName: settings
       - name: musics
         persistentVolumeClaim:
           claimName: musics

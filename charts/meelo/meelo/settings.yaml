@@ -1,0 +1,47 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: settings
+spec:
+  refreshInterval: 24h
+  secretStoreRef:
+    name: bitwarden
+    kind: ClusterSecretStore
+  target:
+    template:
+      engineVersion: v2
+      data:
+        settings.json: |
+          {
+            "trackRegex": [
+              "^([\\/\\\\]+.*)*[\\/\\\\]+lives[\\/\\\\]+(?P<Album>[^\\/\\\\]+)[\\/\\\\]+(?P<Track>[^\\/\\\\]+)\\..*$",
+              "^([\\/\\\\]+.*)*[\\/\\\\]+lives[\\/\\\\]+(?P<Track>[^\\/\\\\]+)\\..*$",
+              "^([\\/\\\\]+.*)*[\\/\\\\]+(?P<Artist>[^\\/\\\\]+) - (?P<Track>[^\\/\\\\]+)\\..*$"
+            ],
+            "metadata": {
+              "source": "embedded",
+              "order": "only",
+              "useExternalProviderGenres": true
+            },
+            "providers": {
+              "musicbrainz": {},
+              "wikipedia": {},
+              "lrclib": {},
+              "allmusic": {},
+              "metacritic": {},
+              "discogs": { "apiKey": {{ .discogs | trim | toJson }} },
+              "genius": { "apiKey": {{ .genius | trim | toJson }} }
+            },
+            "compilations": {
+              "useID3CompTag": true,
+              "artists": ["Various Artists"]
+            },
+            "useEmbeddedThumbnails": true
+          }
+  data:
+  - secretKey: genius
+    remoteRef:
+      key: meelo-genius
+  - secretKey: discogs
+    remoteRef:
+      key: meelo-discogs
