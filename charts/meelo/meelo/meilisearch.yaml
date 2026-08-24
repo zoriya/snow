@@ -35,6 +35,8 @@ spec:
           value: production
         - name: MEILI_LOG_LEVEL
           value: WARN
+        - name: MEILI_UPGRADE_DB
+          value: "true"
         - name: MEILI_MASTER_KEY
           valueFrom:
             secretKeyRef:
