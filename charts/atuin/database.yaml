@@ -20,6 +20,9 @@ spec:
   - client auth
   # same as pg user
   commonName: atuin
+  privateKey:
+    # sqlx >=0.9 (atuin >=18.18.0) only reads pkcs#8 client keys
+    encoding: PKCS8
   issuerRef:
     name: postgres-ca
     kind: ClusterIssuer
