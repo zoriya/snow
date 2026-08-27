@@ -1,5 +1,7 @@
 apiVersion: v1alpha1
 kind: VolumeConfig
 name: EPHEMERAL
+# nvme0n1 is full: EPHEMERAL (p6) is followed immediately by tank (p7, 424GiB) to
+# the end of the disk. This cap cannot be raised without recreating the tank pool.
 provisioning:
   maxSize: 40GiB
