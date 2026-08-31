@@ -1,5 +1,5 @@
 clusterName: unipop
-talosVersion: v1.10.4
+talosVersion: v1.12.11
 kubernetesVersion: 1.33.2
 endpoint: https://kube.sdg.moe:6443
 allowSchedulingOnMasters: true
