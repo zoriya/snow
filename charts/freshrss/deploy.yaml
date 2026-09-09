@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: freshrss
-        image: docker.io/freshrss/freshrss:1.29.1
+        image: docker.io/freshrss/freshrss:1.30.0
         env:
         - name: TZ
           value: UTC
