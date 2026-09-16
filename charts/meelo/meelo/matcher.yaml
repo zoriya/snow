@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: matcher
-        image: arthichaud/meelo-matcher:v3.12.0
+        image: arthichaud/meelo-matcher:v3.13.0
         ports:
         - name: http
           containerPort: 6789
