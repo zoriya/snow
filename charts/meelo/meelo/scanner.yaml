@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: scanner
-        image: arthichaud/meelo-scanner:v3.12.0
+        image: arthichaud/meelo-scanner:v3.13.0
         ports:
         - name: http
           containerPort: 8133
