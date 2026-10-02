@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
         - name: sish
-          image: antoniomika/sish:v2.23.0
+          image: antoniomika/sish:v2.24.0
           args:
             - --ssh-address=:22
             - --http-address=:80
