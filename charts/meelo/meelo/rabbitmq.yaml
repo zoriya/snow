@@ -28,7 +28,7 @@ spec:
       hostname: meelo-mq
       containers:
       - name: rabbitmq
-        image: rabbitmq:4.3-alpine
+        image: rabbitmq:4.4-alpine
         ports:
         - name: amqp
           containerPort: 5672
