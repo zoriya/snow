@@ -17,7 +17,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: ytdlp
-              image: jauderho/yt-dlp:2026.10.21
+              image: jauderho/yt-dlp:2026.10.26
               workingDir: /work
               command: [/app/ytdlp-sync.sh]
               env:
