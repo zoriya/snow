@@ -1,0 +1,78 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: uta
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: uta
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: ghcr.io/zoriya/helm-charts
+    chart: uta
+    targetRevision: 0.0.0-edge
+    helm:
+      valuesObject:
+        image:
+          pullPolicy: Always
+        database:
+          url: postgres://uta@postgres-cluster-rw.postgres/uta?sslmode=verify-full&sslcert=/pg/tls.crt&sslkey=/pg/tls.key&sslrootcert=/pg/ca.crt
+        extraVolumes:
+          - name: postgres-cert
+            secret:
+              secretName: postgres-uta
+              defaultMode: 0640
+        extraVolumeMounts:
+          - name: postgres-cert
+            mountPath: /pg
+        persistence:
+          size: 20Gi
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            memory: 5Gi
+        ingress:
+          enabled: true
+          host: uta.sdg.moe
+          ingressClassName: cilium
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt
+            acme.cert-manager.io/http01-edit-in-place: "true"
+          tls: true
+          tlsSecret: uta-tls
+        extraObjects:
+          - apiVersion: postgresql.cnpg.io/v1
+            kind: Database
+            metadata:
+              name: uta-db
+              namespace: postgres
+            spec:
+              name: uta
+              owner: uta
+              cluster:
+                name: postgres-cluster
+              databaseReclaimPolicy: delete
+
+          - apiVersion: cert-manager.io/v1
+            kind: Certificate
+            metadata:
+              name: postgres-uta
+            spec:
+              secretName: postgres-uta
+              usages:
+                - client auth
+              # same as pg user
+              commonName: uta
+              issuerRef:
+                name: postgres-ca
+                kind: ClusterIssuer
+                group: cert-manager.io

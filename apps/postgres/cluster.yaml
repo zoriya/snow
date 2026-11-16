@@ -52,3 +52,6 @@ spec:
     - name: meelo
       login: true
       disablePassword: true
+    - name: uta
+      login: true
+      disablePassword: true
