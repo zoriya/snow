@@ -20,6 +20,7 @@ spec:
             - --private-keys-directory=/keys
             - --bind-random-subdomains=false
             - --bind-random-ports=false
+            - --tcp-aliases=true
           ports:
             - name: ssh
               containerPort: 22
